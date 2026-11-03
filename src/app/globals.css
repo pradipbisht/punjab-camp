@@ -1,0 +1,251 @@
+@import "tailwindcss" source("../");
+
+@theme inline {
+  --font-sans: var(--font-figtree), var(--font-noto-gurmukhi), var(--font-noto-devanagari), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-fraunces), var(--font-noto-devanagari), Georgia, "Times New Roman", serif;
+  --font-hindi: var(--font-noto-devanagari), "Noto Serif Devanagari", "Nirmala UI", Georgia, serif;
+  --font-punjabi: var(--font-noto-gurmukhi), "Noto Sans Gurmukhi", "Nirmala UI", Arial, sans-serif;
+  /* Every serif heading and accent renders at the same medium weight; optical size still follows font size. */
+  --font-serif--font-variation-settings: "wght" 500, "opsz" 72;
+}
+
+/* Indic scripts need their own faces and zero tracking so matras stay attached. */
+.font-hindi,
+:lang(hi) {
+  font-family: var(--font-hindi);
+  letter-spacing: 0;
+  font-synthesis: none;
+}
+
+.font-punjabi,
+:lang(pa) {
+  font-family: var(--font-punjabi);
+  letter-spacing: 0;
+  font-synthesis: none;
+}
+
+@theme {
+  --color-green: #073c32;
+  --color-deep: #052c25;
+  --color-ink: #173c34;
+  --color-gold: #edbe66;
+  --color-ivory: #faf8f1;
+  --color-muted: #6a756e;
+  --color-line: #dddcd1;
+  --animate-badge-glow: dgs-badge-glow 4.5s ease-in-out infinite;
+  --animate-badge-float: dgs-badge-float 4.8s ease-in-out infinite;
+  --animate-journey-dash: dgs-journey-dash 18s linear infinite;
+}
+
+@keyframes dgs-badge-glow {
+  0%, 100% { box-shadow: 0 0 0 3px #0a3328, 0 0 0 5px #d8bd7988, 0 0 32px #edbe6633, inset 0 0 22px #021a1499; }
+  50% { box-shadow: 0 0 0 3px #0a3328, 0 0 0 6px #f0d9a0, 0 0 48px #edbe6659, inset 0 0 22px #021a1499; }
+}
+
+@keyframes dgs-badge-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -6px, 0); }
+}
+
+@keyframes dgs-journey-dash {
+  to { stroke-dashoffset: -120; }
+}
+
+@keyframes dgs-orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Raised 3D press: thickness lives in the bottom border so overflow-hidden shine still works. */
+.dgs-btn-3d {
+  position: relative;
+  transform: translate3d(0, 0, 0);
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), background .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.dgs-btn-3d:hover {
+  transform: translate3d(0, -3px, 0);
+  filter: brightness(1.04);
+}
+.dgs-btn-3d:active {
+  transform: translate3d(0, 2px, 0);
+  filter: brightness(.98);
+  transition-duration: .08s;
+}
+.dgs-btn-3d-fill {
+  border: 1px solid #073c32;
+  border-bottom-width: 4px;
+  border-bottom-color: #031910;
+  box-shadow: inset 0 1px 0 #ffffff28, 0 8px 18px #052f231f;
+}
+.dgs-btn-3d-fill:hover {
+  box-shadow: inset 0 1px 0 #ffffff38, 0 14px 26px #052f232e;
+}
+.dgs-btn-3d-fill:active {
+  border-bottom-width: 2px;
+  box-shadow: inset 0 1px 0 #ffffff14, 0 3px 8px #052f2318;
+}
+.dgs-btn-3d-box {
+  border: 1.5px solid #173f32;
+  border-bottom-width: 4px;
+  border-bottom-color: #0d2a22;
+  background: #fffcf0;
+  box-shadow: inset 0 1px 0 #ffffff, 0 8px 16px #11271218;
+}
+.dgs-btn-3d-box:hover {
+  background: #fff;
+  box-shadow: inset 0 1px 0 #ffffff, 0 14px 24px #11271222;
+}
+.dgs-btn-3d-box:active {
+  border-bottom-width: 2px;
+  box-shadow: inset 0 1px 0 #ffffff, 0 3px 8px #11271214;
+}
+.dgs-btn-3d-gold {
+  border: 1px solid #c9a35b;
+  border-bottom-width: 4px;
+  border-bottom-color: #8a6a2e;
+  box-shadow: inset 0 1px 0 #fff8e6, 0 8px 18px #3a2a101a;
+}
+.dgs-btn-3d-gold:hover {
+  box-shadow: inset 0 1px 0 #fff8e6, 0 14px 26px #3a2a1028;
+}
+.dgs-btn-3d-gold:active {
+  border-bottom-width: 2px;
+  box-shadow: inset 0 1px 0 #fff8e6, 0 3px 8px #3a2a1014;
+}
+
+.dgs-hero-roundel {
+  position: absolute;
+  right: max(28px, calc((100% - 1280px) / 2));
+  bottom: 72px;
+  z-index: 4;
+  display: grid;
+  width: 118px;
+  height: 118px;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  border: 1px solid #c4c9b6;
+  border-radius: 50%;
+  outline: 6px solid var(--color-ivory);
+  background: var(--color-ivory);
+  box-shadow: 0 8px 24px #25371714;
+}
+.dgs-hero-roundel-spin {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  animation: dgs-orbit-spin 22s linear infinite;
+}
+.dgs-hero-roundel-core {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  line-height: 1.15;
+  color: #173f32;
+}
+@media (max-width: 900px) {
+  .dgs-hero-roundel {
+    right: 20px;
+    bottom: 56px;
+    width: 104px;
+    height: 104px;
+  }
+}
+@media (max-width: 700px) {
+  .dgs-hero-roundel {
+    right: 16px;
+    bottom: 148px;
+    width: 92px;
+    height: 92px;
+  }
+  .dgs-hero-roundel-core {
+    font-size: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dgs-hero-roundel-spin {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dgs-btn-3d,
+  .dgs-btn-3d:hover,
+  .dgs-btn-3d:active {
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Pale gold vanishes on the hero sky and the ivory bar. Burnt brass
+   keeps contrast on both light surfaces; the halo stays gold and tight. */
+@keyframes dgs-brass-text {
+  0%, 100% {
+    text-shadow:
+      0 1px 1px #2c1a0840,
+      0 0 8px #d4a24d99,
+      0 0 18px #c48a2e59;
+  }
+  50% {
+    text-shadow:
+      0 1px 1px #2c1a0840,
+      0 0 11px #e0b35acc,
+      0 0 22px #c48a2e73;
+  }
+}
+
+@keyframes dgs-brass-icon {
+  0%, 100% { filter: drop-shadow(0 1px 1px #2c1a0859) drop-shadow(0 0 5px #d4a24d) drop-shadow(0 0 12px #c48a2e73); }
+  50% { filter: drop-shadow(0 1px 1px #2c1a0859) drop-shadow(0 0 7px #e0b35a) drop-shadow(0 0 16px #c48a2e8c); }
+}
+
+.dgs-contact-glow-text {
+  color: #6a430e;
+  text-shadow:
+    0 1px 1px #2c1a0840,
+    0 0 8px #d4a24d99,
+    0 0 18px #c48a2e59;
+  animation: dgs-brass-text 2.8s ease-in-out infinite;
+}
+
+.dgs-contact-glow-icon {
+  color: #6a430e;
+  filter: drop-shadow(0 1px 1px #2c1a0859) drop-shadow(0 0 5px #d4a24d) drop-shadow(0 0 12px #c48a2e73);
+  animation: dgs-brass-icon 2.8s ease-in-out infinite;
+}
+
+.dgs-site-header-phone {
+  border-radius: 999px;
+}
+
+.dgs-site-header-phone::before {
+  content: "";
+  position: absolute;
+  inset: 6px -8px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at center, #e8c36a55, #e8c36a1f 55%, transparent 76%);
+}
+
+.dgs-site-header-phone:hover .dgs-contact-glow-text,
+.dgs-site-header-phone:focus-visible .dgs-contact-glow-text {
+  color: #4f3109;
+}
+
+.dgs-site-header-phone:hover .dgs-contact-glow-icon,
+.dgs-site-header-phone:focus-visible .dgs-contact-glow-icon {
+  color: #4f3109;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dgs-contact-glow-text,
+  .dgs-contact-glow-icon {
+    animation: none;
+  }
+}

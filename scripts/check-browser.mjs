@@ -1,0 +1,285 @@
+import { chromium } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+
+const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+async function revealWholePage() {
+  await page.evaluate(async () => {
+    const frame = () => new Promise(resolve => requestAnimationFrame(resolve));
+    for (let top = 0; top < document.documentElement.scrollHeight; top += innerHeight * .65) {
+      window.scrollTo({ top, behavior: 'instant' });
+      await frame();
+      await frame();
+    }
+  });
+  await page.waitForFunction(() => !document.querySelector('[data-reveal-state="pending"]'), null, { timeout: 10000 });
+  await page.evaluate(async () => {
+    // Wait for reveals and text entrances; the ticker never finishes.
+    const entrances = document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity);
+    await Promise.all(entrances.map(animation => animation.finished.catch(() => {})));
+  });
+}
+try {
+  const response = await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+  assert.equal(response.status(), 200);
+  await page.getByRole('heading', { name: /A brighter future/ }).waitFor();
+  assert.ok(await page.locator('[data-reveal-state="pending"]').count() > 0, 'Off-screen reveals are initialized');
+  await revealWholePage();
+  for (const id of ['admission-drive', 'why-dgs', 'life-at-dgs', 'boarding', 'programmes', 'faqs']) {
+    await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+  }
+  await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.complete || img.getClientRects().length > 0).map(img => img.decode().catch(() => {}))); });
+  await page.evaluate(() => { const card = document.querySelector('#life-at-dgs article'); window.scrollTo({ top: card.getBoundingClientRect().top + scrollY - innerHeight * .3, behavior: 'instant' }); });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'artifacts/school-life-desktop.png' });
+  await page.locator('#boarding').scrollIntoViewIfNeeded();
+  await page.locator('#boarding').screenshot({ path: 'artifacts/north-east-benefits-desktop.png', style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.locator('.region-section').scrollIntoViewIfNeeded();
+  await page.locator('.region-section').screenshot({ path: 'artifacts/journey-desktop.png', style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.locator('#faqs').scrollIntoViewIfNeeded();
+  await page.locator('#faqs').screenshot({ path: 'artifacts/faq-desktop.png', style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.locator('footer').scrollIntoViewIfNeeded();
+  await page.locator('footer').screenshot({ path: 'artifacts/footer-desktop.png', style: 'header, .scroll-progress, .skip-link { visibility: hidden; }' });
+  await page.locator('#programmes').scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  await page.waitForFunction(() => [...document.querySelectorAll('.dgs-partners-section-partners [role="presentation"]')].every(element => element.getAnimations().some(animation => animation.playState === 'running')));
+  const constellation = await page.evaluate(() => {
+    const track = document.querySelector('.dgs-partners-section-partners');
+    const wrappers = [...track.querySelectorAll('[role="presentation"]')];
+    const animations = wrappers.flatMap(element => element.getAnimations());
+    const center = element => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+    };
+    const sample = time => {
+      animations.forEach(animation => { animation.currentTime = time; });
+      const school = center(document.querySelector('.dgs-partners-section-schoolBadge'));
+      const badges = [...track.querySelectorAll('[role="tab"]')].map(center);
+      return { school, badges };
+    };
+    const start = sample(0);
+    animations.forEach(animation => {
+      const timing = animation.effect.getTiming();
+      animation.currentTime = (timing.delay || 0) + timing.duration * 0.5;
+    });
+    const moved = {
+      school: center(document.querySelector('.dgs-partners-section-schoolBadge')),
+      badges: [...track.querySelectorAll('[role="tab"]')].map(center),
+    };
+    sample(0);
+    return {
+      start,
+      moved,
+      durations: animations.map(animation => animation.effect.getTiming().duration),
+      count: animations.length,
+      trackName: getComputedStyle(track).animationName,
+    };
+  });
+  assert.equal(constellation.trackName, 'none', 'Partner logos stay on a static constellation');
+  assert.equal(constellation.count, 4, 'Four partner badges float independently');
+  assert.ok(constellation.durations.every(duration => duration === 4800), 'Each badge floats on a 4.8s cycle');
+  assert.deepEqual(constellation.start.school, constellation.moved.school, 'Doon Global remains fixed at the centre');
+  for (let index = 0; index < 4; index++) {
+    const before = constellation.start.badges[index];
+    const after = constellation.moved.badges[index];
+    const travel = Math.hypot(after.x - before.x, after.y - before.y);
+    assert.ok(travel > 2 && travel < 14, `Partner ${index} floats in place (${travel.toFixed(1)}px)`);
+  }
+  await page.getByRole('button', { name: 'Pause programme autoplay', exact: true }).click();
+  await page.waitForFunction(() => [...document.querySelectorAll('.dgs-partners-section-partners [role="presentation"]')].every(element => element.getAnimations().every(animation => animation.playState === 'paused')));
+  await page.getByRole('button', { name: 'Resume programme autoplay', exact: true }).click();
+  await page.waitForFunction(() => [...document.querySelectorAll('.dgs-partners-section-partners [role="presentation"]')].some(element => element.getAnimations().some(animation => animation.playState === 'running')));
+  await page.locator('.group\\/orbit').hover({ position: { x: 5, y: 5 } });
+  await page.waitForFunction(() => [...document.querySelectorAll('.dgs-partners-section-partners [role="presentation"]')].every(element => element.getAnimations().every(animation => animation.playState === 'paused')));
+  await page.locator('#programmes').screenshot({ path: 'artifacts/partners-desktop.png' });
+  await page.locator('.region-section').scrollIntoViewIfNeeded();
+  await page.locator('.region-section').screenshot({ path: 'artifacts/journey-desktop.png', style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await mkdir('artifacts', { recursive: true });
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('header'), '::before').opacity === '0');
+  await page.screenshot({ path: 'artifacts/desktop.png', fullPage: true });
+  await page.screenshot({ path: 'artifacts/desktop-hero.png' });
+  await page.evaluate(() => window.scrollTo({ top: 320, behavior: 'instant' }));
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('header'), '::before').opacity === '1');
+  await page.screenshot({ path: 'artifacts/desktop-scrolled.png' });
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('header'), '::before').opacity === '0');
+
+  await page.getByRole('button', { name: 'Enquire for 2027–28', exact: true }).click();
+  await page.locator('.admissions-dialog img').evaluateAll(images => Promise.all(images.map(image => image.decode())));
+  await page.locator('.admissions-dialog').screenshot({ path: 'artifacts/enquiry-desktop.png' });
+  await page.locator('#enquire').getByRole('button', { name: 'Privacy details', exact: true }).click();
+  await page.locator('.privacy-dialog').waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await page.locator('.privacy-dialog').waitFor({ state: 'hidden' });
+  assert.equal(await page.locator('[name="consent"]').isChecked(), false);
+  await page.getByRole('button', { name: 'Request a callback' }).click();
+  await page.getByText('Enter a parent or guardian’s name (2–80 characters).', { exact: true }).waitFor();
+  await page.locator('.admissions-dialog').screenshot({ path: 'artifacts/enquiry-errors.png' });
+  await page.locator('#parent-name').fill('Preview Test Parent');
+  await page.locator('#mobile').fill('9876543210');
+  await page.locator('#grade').selectOption('6');
+  await page.locator('#region').selectOption('Ludhiana');
+  await page.locator('[name="consent"]').check();
+  await page.getByRole('button', { name: 'Request a callback' }).click();
+  await page.getByRole('heading', { name: 'Your enquiry is ready.' }).waitFor();
+  await page.locator('.admissions-dialog').screenshot({ path: 'artifacts/enquiry-ready.png' });
+  const email = await page.getByRole('link', { name: 'Open email & send' }).getAttribute('href');
+  assert.ok(email.startsWith('mailto:admissions@doonglobalschool.edu.in?'));
+  await page.getByRole('button', { name: 'Back to enquiry form' }).click();
+  assert.equal(await page.locator('#parent-name').inputValue(), 'Preview Test Parent');
+  await page.getByRole('button', { name: 'Close admissions enquiry' }).click();
+  await page.getByRole('button', { name: 'Plan your child’s next step', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'hidden' });
+  for (const name of ['Request an admissions callback', 'Plan a campus visit']) {
+    await page.getByRole('button', { name, exact: true }).click();
+    await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'visible' });
+    await page.keyboard.press('Escape');
+    await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'hidden' });
+  }
+
+  // Drive section: the football clip plays in the background; the content waits for the strike, then rises in.
+  const driveAt = top => page.evaluate(async top => {
+    const section = document.getElementById('admission-drive');
+    window.scrollTo({ top: section.getBoundingClientRect().top + scrollY - innerHeight * top, behavior: 'instant' });
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    return section.dataset.shot;
+  }, top);
+  assert.equal(await driveAt(.1), 'before', 'Drive content waits during the run-up');
+  assert.equal(await page.locator('.dgs-admission-drive-panel').evaluate(element => getComputedStyle(element).pointerEvents), 'none', 'Hidden drive content cannot be clicked');
+  assert.equal(await driveAt(-.5), 'after', 'Drive content arrives after the strike');
+  await page.waitForFunction(() => document.querySelector('.dgs-admission-drive-canvas').dataset.ready === 'true');
+  await page.waitForTimeout(1300);
+  await page.screenshot({ path: 'artifacts/admission-drive-desktop.png' });
+  await page.getByRole('button', { name: 'Register for the Ludhiana admission drive', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#drive').inputValue(), 'Ludhiana', 'Drive card preselects its city');
+  assert.equal(await page.locator('#region').inputValue(), 'Ludhiana', 'Drive card preselects its city in the enquiry form');
+  assert.equal(await page.locator('#parent-name').inputValue(), 'Preview Test Parent', 'Drive preset keeps typed details');
+  await page.getByRole('button', { name: 'Register for Ludhiana', exact: true }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'hidden' });
+
+  // Scattered collage: cards start off to the side and settle into place as the section scrolls up; the page itself keeps scrolling.
+  const collageTravel = await page.evaluate(async () => {
+    const card = document.querySelector('#life-at-dgs article');
+    const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const offset = () => Math.abs(new DOMMatrix(getComputedStyle(card).transform).m41);
+    window.scrollTo({ top: document.getElementById('life-at-dgs').offsetTop - innerHeight, behavior: 'instant' }); await frame();
+    const scattered = offset();
+    window.scrollTo({ top: card.getBoundingClientRect().top + scrollY - innerHeight * .3, behavior: 'instant' }); await frame();
+    return { scattered, settled: offset() };
+  });
+  assert.ok(collageTravel.scattered > 100 && collageTravel.settled < 2, `Collage cards fly in and settle (${JSON.stringify(collageTravel)})`);
+  await page.getByRole('heading', { name: 'New friendships. A sense of belonging.' }).waitFor();
+  await page.getByRole('link', { name: 'Explore Life at DGS', exact: true }).click();
+  await page.waitForURL('**/#programmes');
+  await page.waitForFunction(() => !document.documentElement.classList.contains('lenis-scrolling'));
+  await page.locator('#programmes').scrollIntoViewIfNeeded();
+  const pauseSpotlight = page.getByRole('button', { name: 'Pause programme autoplay', exact: true });
+  if (await pauseSpotlight.isVisible()) await pauseSpotlight.click();
+  await page.getByRole('tab', { name: 'Bengaluru FC' }).click();
+  await page.getByRole('heading', { name: /Find your footballing feet|ਆਪਣੀ ਫੁੱਟਬਾਲ/ }).waitFor();
+  await page.getByRole('tab', { name: 'Bengaluru FC' }).press('ArrowRight');
+  await page.getByRole('heading', { name: /Clarity before the boards|ਬੋਰਡ ਤੋਂ ਪਹਿਲਾਂ/ }).waitFor();
+  await page.mouse.move(0, 0);
+  assert.equal(await page.locator('.dgs-partners-section-partners [role="presentation"]').evaluateAll(elements => elements.every(element => element.getAnimations().every(animation => animation.playState === 'paused'))), true, 'Keyboard focus pauses the badge float');
+  assert.equal(await page.locator('#faqs [aria-expanded="true"]').count(), 0, 'FAQ items start closed');
+  await page.getByRole('button', { name: /Which classes are eligible for boarding/ }).click();
+  await page.locator('#answer-1').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#question-1').getAttribute('aria-expanded'), 'true');
+  assert.equal(await page.locator('#answer-0').getAttribute('aria-hidden'), 'true');
+  assert.equal(await page.locator('#answer-0').evaluate(element => element.inert), true);
+  await page.locator('#question-1').press('ArrowDown');
+  assert.equal(await page.locator('#question-2').evaluate(element => element === document.activeElement), true);
+  await page.locator('#question-2').press('Enter');
+  assert.equal(await page.locator('#question-2').getAttribute('aria-expanded'), 'true');
+  assert.equal(await page.locator('#faqs [aria-expanded="true"]').count(), 1);
+  await page.locator('#question-2').press('Space');
+  await page.locator('#answer-2').waitFor({ state: 'hidden' });
+  await page.locator('#question-2').press('Home');
+  assert.equal(await page.locator('#question-0').evaluate(element => element === document.activeElement), true);
+  await page.locator('#question-0').press('Space');
+  await page.getByRole('button', { name: 'Ask our admissions team', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'hidden' });
+  await page.getByRole('button', { name: 'Privacy details', exact: true }).last().click();
+  await page.locator('.privacy-dialog').waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await page.locator('.privacy-dialog').waitFor({ state: 'hidden' });
+
+  for (const width of [1440, 1024, 768, 390, 360]) {
+    await page.setViewportSize({ width, height: 844 });
+    const dimensions = await page.evaluate(() => ({ viewport: innerWidth, page: document.documentElement.scrollWidth }));
+    assert.ok(dimensions.page <= dimensions.viewport, `Horizontal overflow at ${width}px: ${dimensions.page}`);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload({ waitUntil: 'networkidle' });
+  await revealWholePage();
+  for (const id of ['admission-drive', 'why-dgs', 'life-at-dgs', 'boarding', 'programmes', 'faqs']) await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+  await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.complete || img.getClientRects().length > 0).map(img => img.decode().catch(() => {}))); });
+  await page.locator('#life-at-dgs').scrollIntoViewIfNeeded();
+  await page.evaluate(() => { const section = document.getElementById('admission-drive'); window.scrollTo({ top: section.getBoundingClientRect().top + scrollY + innerHeight * .5, behavior: 'instant' }); });
+  await page.waitForTimeout(1300);
+  await page.screenshot({ path: 'artifacts/admission-drive-mobile.png' });
+  await page.evaluate(() => { const card = document.querySelector('#life-at-dgs article'); window.scrollTo({ top: card.getBoundingClientRect().top + scrollY - innerHeight * .25, behavior: 'instant' }); });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'artifacts/school-life-mobile.png' });
+  await page.locator('#boarding').scrollIntoViewIfNeeded();
+  await page.locator('#boarding').screenshot({ path: 'artifacts/north-east-benefits-mobile.png', style: '.mobile-cta, header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.locator('#faqs').scrollIntoViewIfNeeded();
+  await page.locator('#faqs').screenshot({ path: 'artifacts/faq-mobile.png', style: '.mobile-cta, header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.locator('footer').scrollIntoViewIfNeeded();
+  await page.locator('footer').screenshot({ path: 'artifacts/footer-mobile.png', style: '.mobile-cta, header, .scroll-progress, .skip-link { visibility: hidden; }' });
+  await page.locator('#programmes').scrollIntoViewIfNeeded();
+  await page.locator('#programmes').screenshot({ path: 'artifacts/partners-mobile.png', style: '.mobile-cta { visibility: hidden; }' });
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.getByRole('button', { name: 'Open navigation' }).click();
+  assert.equal(await page.locator('#mobile-menu').isVisible(), true);
+  await page.screenshot({ path: 'artifacts/mobile-navigation.png' });
+  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Boarding life' }).click();
+  assert.equal(await page.locator('#mobile-menu').count(), 0);
+  await page.waitForFunction(() => Math.abs(document.getElementById('boarding').getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 3);
+  // Let the smooth anchor scroll finish so it doesn't pull the page back after the jump to the top.
+  await page.waitForFunction(() => !document.documentElement.classList.contains('lenis-scrolling'));
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('header'), '::before').opacity === '0');
+  await page.screenshot({ path: 'artifacts/mobile.png', fullPage: true });
+  await page.screenshot({ path: 'artifacts/mobile-hero.png' });
+  await page.getByRole('button', { name: 'Enquire now', exact: true }).click();
+  await page.locator('.admissions-dialog').evaluate(async dialog => { await Promise.all(dialog.getAnimations().map(animation => animation.finished.catch(() => {}))); });
+  await page.locator('.admissions-dialog').evaluate(dialog => { dialog.scrollTop = 0; });
+  await page.screenshot({ path: 'artifacts/mobile-form.png' });
+  for (const width of [390, 360]) {
+    await page.setViewportSize({ width, height: 844 });
+    const fits = await page.locator('.admissions-dialog').evaluate(dialog => dialog.scrollWidth <= dialog.clientWidth);
+    assert.equal(fits, true, `Enquiry form fits ${width}px`);
+  }
+  const broken = await page.locator('img').evaluateAll(images => images.filter(img => !img.complete || img.naturalWidth === 0).map(img => img.src));
+  assert.deepEqual(broken, []);
+  await page.keyboard.press('Escape');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload({ waitUntil: 'networkidle' });
+  assert.equal(await page.locator('[data-reveal-state="pending"]').count(), 0);
+  assert.equal(await page.locator('[data-reveal]').evaluateAll(elements => elements.every(element => getComputedStyle(element).opacity === '1')), true);
+  assert.equal(await page.locator('.scroll-progress').evaluate(element => getComputedStyle(element).display), 'none');
+  assert.equal(await page.locator('#life-at-dgs article').first().evaluate(element => element.style.transform), '', 'Reduced motion leaves the collage cards in place');
+  assert.equal(await page.locator('.dgs-admission-drive-canvas').evaluate(element => getComputedStyle(element).display), 'none', 'Reduced motion shows the still strike instead of the scrubbed clip');
+  assert.equal(await page.locator('#admission-drive').evaluate(element => element.dataset.shot), undefined, 'Reduced motion shows the drive content straight away');
+  assert.equal(await page.locator('.dgs-partners-section-partners').evaluate(element => getComputedStyle(element).animationName), 'none');
+  assert.equal(await page.getByRole('button', { name: 'Pause programme autoplay', exact: true }).isVisible(), false);
+  const staticPage = await browser.newPage({ javaScriptEnabled: false });
+  try {
+    await staticPage.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+    assert.equal(await staticPage.locator('[data-reveal]').evaluateAll(elements => elements.every(element => getComputedStyle(element).opacity === '1')), true);
+    assert.equal(await staticPage.locator('.dgs-partners-section-partners').evaluate(element => getComputedStyle(element).animationName), 'none');
+  } finally { await staticPage.close(); }
+  assert.deepEqual(errors, []);
+  console.log('PASS: desktop/mobile layouts, no overflow (360–1440px), images, form validation + email fallback, tabs, keyboard navigation, FAQs, privacy, mobile anchors, footer CTAs, scroll reveals, reduced motion and no-JS content.');
+} finally { await browser.close(); }

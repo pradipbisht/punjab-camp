@@ -1,0 +1,194 @@
+# Doon Global School — North East admissions
+
+A responsive Next.js 16 + React + TypeScript + Tailwind CSS 4 landing page for families in Siliguri, North Bengal, Sikkim and North East India. The design follows the supplied campaign references: forest green, ivory, gold, editorial typography and a cinematic hero.
+
+## Run locally
+
+```powershell
+npm.cmd install
+npm.cmd run dev
+```
+
+Open http://localhost:3000. On Windows, `npm.cmd` avoids PowerShell execution-policy issues. On other platforms, use `npm`.
+
+## Production
+
+```powershell
+npm.cmd run build
+npm.cmd start
+```
+
+Deploy to a Next.js-compatible Node host such as Vercel. This project includes a server endpoint and should not be deployed as a static export. Set `NEXT_PUBLIC_SITE_URL` to the final public URL before the production build.
+
+## Admissions enquiries
+
+The enquiry dialog uses a forest-green school visual beside an ivory form on desktop, and a compact brand banner on phones. It includes labelled fields, selectable interest cards, visible validation errors, a sticky close control and separate sent/email-draft states. The existing North East student campaign illustration is reused. Previews: `artifacts/enquiry-desktop.png`, `artifacts/mobile-form.png`, `artifacts/enquiry-errors.png` and `artifacts/enquiry-ready.png`.
+
+The form opens in an accessible dialog from the hero, boarding, final admissions or mobile navigation buttons. It validates details in the browser and on the server, requires contact consent and includes a honeypot. No enquiry is saved in browser storage.
+
+**Default behavior:** the form prepares an email addressed to `admissions@doonglobalschool.edu.in`. The parent must click **Open email & send**, review the draft, and send it from their email application. The interface explicitly states that this draft has not been sent. The application never claims a callback was booked just because a form was filled out.
+
+**Direct delivery:** copy `.env.example` to `.env.local` and configure a trusted admissions CRM or automation endpoint:
+
+```dotenv
+ADMISSIONS_WEBHOOK_URL=https://your-admissions-service.example/enquiries
+ADMISSIONS_WEBHOOK_TOKEN=your-server-side-token
+NEXT_PUBLIC_SITE_URL=https://your-landing-page.example
+```
+
+The server sends a JSON POST with `name`, `phone` (10 digits), `grade`, `region`, `city`, `interest`, `drive` (an admission-drive city, or empty), `consent`, `session`, `source` and `submittedAt`. A token, if supplied, is sent in the `Authorization: Bearer` header. The webhook must return a successful HTTP status only after accepting the enquiry. Errors preserve the form and show a retry/call option. Secrets are never exposed to the browser. There is no built-in CRM or database.
+
+Before connecting a public campaign, use the receiving CRM’s deduplication, spam controls and retention settings. Confirm the school’s current contact details, fees and admissions arrangements.
+
+## Project map
+
+Feature folders live under `src/features/<name>/` with `components/`, and shared chrome under `src/shared/`. `src/app/` is the Next.js shell only.
+
+- `src/app/page.tsx`: landing-page composition.
+- `src/app/globals.css`: Tailwind import and theme tokens only; no custom selectors or component rules.
+- `postcss.config.mjs`: official Tailwind PostCSS integration.
+- `src/app/layout.tsx`: locally hosted fonts through `next/font/local`, Tailwind typography defaults and shared interaction utilities.
+- `src/features/hero`: campus hero, EducationWorld rankings, verified school facts and admissions entry point.
+- `src/features/admission-drive`: drive-city ticker, football shot, city schedule and four-step process. Drive dates and venues are edited in its `stops` list.
+- `src/features/why-dgs`: “From Punjab to a world of संभावनाओं” intro with campus photo and roundel.
+- `src/features/school-life`: “A School Day” scattered photo collage whose cards fly in from the sides as the page scrolls.
+- `src/features/boarding`: boarding benefits, eligibility and an admissions entry point.
+- `src/features/programmes`: sports banner, partner logos and programme cards.
+- `src/features/journey`: Punjab-to-Dehradun map and MaskedHeading.
+- `src/features/faq`: numbered question cards and admissions guidance panel.
+- `src/features/enquiry`: enquiry form and admissions/privacy dialogs.
+- `src/shared/layout`: header, footer, motion, mobile CTA.
+- `src/shared/ui`: FlipCopy and rotating-word.
+- `src/shared/lib/enquiry.ts`: shared validation, Punjab cities and email preparation.
+- `src/app/api/enquiry/route.ts`: server validation and optional webhook delivery.
+- `public/images`: supplied-school imagery, partner logos and generated campaign visuals.
+- `public/images/life-at-dgs`: DGS student photographs (`campus-*.webp`) used in the school-life cards, alongside the earlier illustrative assets retained for other sections.
+- `docs/life-at-dgs-images.md`: full generation prompts and asset provenance for the school-life section.
+- `artifacts`: desktop and mobile preview screenshots.
+
+All layout, responsive, hover, focus and form-state styling uses Tailwind utility classes. Component-local `ui` objects group static class strings so Tailwind can discover them at build time. The `dgs-*` class names are only DOM hooks for descendant variants and motion, with no separate CSS rules. Shared theme tokens live in `globals.css`; fonts are loaded by Next.js. There are no CSS modules, custom keyframe stylesheets, `@apply` component rules or runtime CSS-in-JS. Installation follows the [Tailwind Next.js guide](https://tailwindcss.com/docs/installation/framework-guides/nextjs).
+
+## North East admission drive
+
+A forest-green ticker of the drive cities leads into the forest-green “Meet DGS admissions, closer to home.” section directly below the hero (`#admission-drive`). On desktop it is a two-column layout. The left column holds the introduction, a register button and the phone number, with the four-step “How the drive works” timeline beneath them. The right column is a “Drive cities” schedule panel: one slim, fully clickable row for each of six cities (Siliguri, Guwahati, Gangtok, Shillong, Imphal and Dimapur) and an “Elsewhere in the North East?” strip for other states. On phones the schedule comes before the steps. The steps follow the admissions process already described in the FAQs. The header, footer and hero badge link to it.
+
+Each city’s **Register** button opens the enquiry form with that city selected in the “North East admission drive” field and its state selected under City / state. Anything the parent has already typed is kept. With a city selected, the submit button reads “Register for <city>”, and the email draft and webhook name the drive city. The field is optional: “Not now — just a callback” sends an ordinary enquiry.
+
+**Before launch:** no drive dates or venues are published. Each card shows “Date to be announced” until you fill in `date` and `venue` for that city in `stops` in `src/features/admission-drive/components/admission-drive.tsx`. To add or remove a city, update `DRIVE_CITIES` in `src/shared/lib/enquiry.ts` and `stops` together; TypeScript flags any mismatch. Confirm the cities and the “the team gets in touch to confirm the venue” step with the admissions team. Previews: `artifacts/admission-drive-desktop.png` and `artifacts/admission-drive-mobile.png`.
+
+## Readability
+
+Body copy is 15–17px, labels and eyebrows are at least 11px, and the base size is 16px. The only smaller text is in the decorative “Learn · Belong · Become” stamp and the partner-logo captions, which must fit inside their circles. Small text on light backgrounds was darkened, keeping its hue, to at least 5:1 contrast against ivory. Accent headings are at least 4.6:1 and icons at least 3.4:1. Decorative marks (laurels, separators and stars) are unchanged. Light text on the green panels already met the contrast targets and kept its colours, but uses the larger sizes.
+
+## Checks
+
+```powershell
+npm.cmd test
+npm.cmd run typecheck
+npm.cmd run build
+# With the local server running:
+npm.cmd run test:browser
+```
+
+The browser check uses installed Google Chrome on Windows; change `executablePath` in `scripts/check-browser.mjs` for another machine. It checks responsive overflow at 360, 390, 768, 1024 and 1440px, image loading, validation, email preparation, keyboard-accessible programme tabs, FAQs, privacy dismissal and mobile navigation. It sends synthetic enquiries only to the local server; run with `ADMISSIONS_WEBHOOK_URL` unset to avoid transmitting test data to a live CRM.
+
+## Footer and motion
+
+The compact forest-green footer uses a small admissions strip above three columns for school identity and contact details, navigation, and the campus address. The oversized decorative wordmark and repeated marketing copy have been removed; mobile groups the logo and contact details into one row. Callback and campus-visit buttons open the existing enquiry dialog. The previous separate final CTA has been folded into this footer.
+
+Sections reveal once using IntersectionObserver and Tailwind data-attribute variants. Related items cascade in with delays of up to six steps, and drive rows enter from the right (`data-reveal-from="right"`). The browser's Web Animations API handles the hero, menu, details and dialog entrances.
+
+The scroll-driven motion takes its cue from editorial portfolio sites, implemented in this project's own code:
+
+- **Smooth scrolling:** [Lenis](https://github.com/darkroomengineering/lenis), the only animation dependency, adds inertia to wheel scrolling. Touch scrolling stays native. It pauses while a dialog is open, and dialogs and the mobile menu scroll natively (`data-lenis-prevent`). In-page links glide to their section and still update the URL.
+- **Headings:** each section heading splits at its authored line breaks, and every line rises out of its own mask.
+- **Labels:** eyebrow labels type in letter by letter. Screen readers get the plain text.
+- **Route:** in the “Your roots stay with you” section, the paper plane flies along the route from Siliguri to Dehradun as the visitor scrolls, drawing its trail.
+- **Hero photograph:** the full-width campus image draws in to a rounded card as the visitor scrolls past it.
+- **Photo collage:** see the school-life section below.
+- **Images:** large images open from a smaller window as they arrive and drift with a gentle parallax.
+- **Ticker:** the forest-green drive-city ticker (large serif city names, alternating ivory and gold italic, gold diamond separators, softly faded edges) drifts on its own and speeds up, or reverses, with the scroll.
+- **Rotating town:** “From Siliguri.” cycles through North East home towns.
+- **Header links:** navigation labels roll to a fresh copy on hover.
+
+A requestAnimationFrame-throttled scroll handler drives the progress line and these scroll-linked effects. Content is visible without JavaScript. Reduced-motion preferences turn off smooth scrolling, the splits, scroll-linked effects, ticker, rotation, reveals and progress line, and restore the original markup. Keyboard focus reveals pending content and cancels any entrance animation hiding the focused control. The browser check exercises these fallbacks alongside footer actions and mobile navigation.
+
+Footer previews: `artifacts/footer-desktop.png` and `artifacts/footer-mobile.png`.
+
+The FAQ section pairs ivory question cards with a forest-green admissions help panel. Answers open and close with a Tailwind grid transition; collapsed answers are inert and hidden from assistive technology. Buttons support Enter/Space, Up/Down and Home/End navigation, and the help button opens the existing enquiry dialog. Reduced motion disables transitions. The original questions and verified answers are retained. Previews: `artifacts/faq-desktop.png` and `artifacts/faq-mobile.png`.
+
+## Content and image provenance
+
+School information was checked against the official website on 28 October 2026:
+
+- [School overview, rankings and contact information](https://doonglobalschool.edu.in/)
+- [Boarding eligibility and fee inclusions](https://doonglobalschool.edu.in/boarding-school-in-dehradun/)
+- [Named programmes and partner organisations](https://doonglobalschool.edu.in/programmes/)
+- [School infrastructure](https://doonglobalschool.edu.in/infrastructure/)
+- [Activities and development](https://doonglobalschool.edu.in/holistic-development/)
+
+Boarding is presented as **boys, Classes 3–12**. Books and uniforms are not presented as free. Programme availability and any charges must be confirmed by class and session. The reference images’ unverified campus-size and alumni figures are not used.
+
+Official photographs and logos are saved locally from the school’s public website; exact source paths are recorded in `scripts/download-assets.mjs`. They remain the property of their respective owners. The hero is an illustrative campaign image, clearly identified in its alt text and the page footer, rather than a photograph of the actual campus. The campus section uses the school’s real building photo.
+
+The original student hero was created with the **built-in image generation tool**, and remains archived at `public/images/hero.png`. Its original generation prompt:
+
+> Use case: ads-marketing. Asset type: photographic background for a premium Indian boarding-school admissions landing page. Create a cinematic, natural-looking landscape photo, 16:9 wide composition, no text or graphic overlays. A joyful Indian teenage schoolboy about 15 in a deep forest green blazer with subtle small gold crest, white shirt, green gold striped tie and backpack occupies center-right, from waist upwards, looking slightly upwards to the left with optimism. Background a warm cream school building with green trim surrounded by lush trees in Dehradun foothills, distant mountains, golden morning sunlight from the upper right. The entire left 45% is dark forest foliage with atmospheric space for website headline overlay. Far right greenery softly blurred for a form overlay. Rich dark green, cinematic gold rimlight, realistic skin, natural fabric, editorial school campaign photography. No logos, no words, no watermark, no UI, no collage. Inspired by the user's attached Doon Global School campaign mood but create a single original full-bleed photo.
+
+Fonts are locally hosted; see the SIL Open Font License files in `public/fonts`. No external font requests, advertising scripts or analytics are included.
+
+**Typography:** headings, italic accents and other serif text use **Fraunces**. Body text, labels and buttons use **Figtree**. Both are Latin-subset variable fonts saved by `scripts/download-fonts.mjs`. Fraunces has an optical-size axis, so small headings get sturdier strokes and large ones get finer detail automatically. `globals.css` sets all serif text to weight 500 (`--font-serif--font-variation-settings`), so headings keep the presence of the previous DM Serif Display. Figtree has a larger x-height and more open letters than DM Sans, which helps readability on phones. Both pairings were compared on the live page at 1440px and 390px before switching. Font files total about 170KB: 20KB for Figtree and 148KB for Fraunces roman and italic.
+
+## Current campus hero
+
+The current hero uses `public/images/hero-campus.png`, restored with its original desktop, tablet and mobile framing. It retains the ivory fade, rankings, transparent header and smooth entrance animations. The alternative misty-campus edit remains archived at `public/images/hero-campus-misty.png` and `public/images/hero-campus-misty.webp`, with its [edit prompt](docs/misty-hero-image.md).
+
+The latest hero follows the supplied bright campus-and-rankings reference: an ivory fade, green headline, gold laurels and terracotta ranking numbers. The school’s verified #3 Dehradun / #4 Uttarakhand EducationWorld 2026–27 rankings are retained. The reference’s unverified 200 boarders, 8-acre and 5000+ alumni claims are not used. Admissions buttons open the existing form in a native accessible dialog.
+
+Hero text uses a subtle staggered reveal on initial load, with no looping animation. It uses CSS only and renders immediately when reduced motion is requested. The fixed header overlays the hero image transparently at the top. After 64px of scrolling, it smoothly becomes a compact light header; returning to the top restores transparency. Opening the mobile menu also provides a solid background for readability. Header transitions respect reduced motion, and active section links, admissions buttons and keyboard navigation remain available.
+
+The current illustrative background was created with the **built-in image generation tool** and is saved at `public/images/hero-campus.png`. The actual campus photograph remains in the Why DGS section. Generation prompt:
+
+> Use case: ads-marketing. Asset type: wide premium school admissions website hero background, single cinematic photographic illustration, 16:9 landscape. An aspirational Indian boarding school campus in the Dehradun foothills on a beautiful clear morning. The RIGHT 60 percent features a handsome warm-cream two-storey school building with deep forest-green trim, open verandas, a green pitched entrance pavilion and a modest tower; a small architectural green sign on the building reads exactly 'DOON GLOBAL SCHOOL' in stacked white letters with a small gold sun emblem. Dense landscaped gardens, palms, yellow flowers and manicured green lawn surround a walkway. Small groups of teenage Indian students in formal white shirts, dark trousers and forest-green blazers walk toward the entrance naturally, as secondary subjects. Blue Himalayan foothills and soft white clouds behind the school. Sunlit green leaves frame the upper right and lower right corners. The LEFT 40 percent is airy pale ivory morning mist, very soft distant sky and blurred garden, empty of main buildings or people, to support dark green website headline, red-brown ranking numbers and gold laurel graphics that will be rendered separately in HTML. Bright and inviting, elegant, realistic warm sunlight, subtle atmospheric depth, crisp architectural detail on the right. The building is the focal point, not an individual student. No UI, no overlaid titles, no ranking numbers, no badges, no collage, no watermark. Keep the right campus fully visible, with enough foreground for students and garden. The left is pale and calm, not dark.
+
+## School-life gallery
+
+“A School Day with Room for More” is a loose collage of six photo cards (Academics, Sports, Creativity, Leadership, Life Skills and Boarding Life). Each card holds its photo, heading and description, and the cards rest slightly tilted with staggered columns. As the page scrolls, each card flies in from a scattered position off to the side, rotating and scaling into place. The columns then drift at slightly different speeds. The page keeps scrolling normally throughout; nothing is pinned. Phones show one column of alternating cards, and tablets show two. With reduced motion, or without scripting, the cards simply rest in the collage. “Explore Life at DGS” moves to the programmes section.
+
+The six cards use the existing DGS student photographs in `public/images/life-at-dgs/campus-*.webp`: science lab, football team, robotics, house parade, music and study time. Landscape frames keep the group activities visible, with descriptive alt text for each photo. The earlier generated assets remain available for other sections; their prompts are preserved in [the image generation record](docs/life-at-dgs-images.md). Preview screenshots: `artifacts/school-life-desktop.png` and `artifacts/school-life-mobile.png`.
+
+## Football shot (admission drive background)
+
+The admission drive section opens with the football clip as its full-screen background. A sticky backdrop keeps the clip in view, and above the drive content there is a pre-roll of about 62% of the viewport height. As the visitor scrolls through it:
+
+1. The North East student runs up to the ball across the full screen. A “Scroll to take the shot” hint shows during the run-up.
+2. He strikes the ball (frame 28). At that moment a dark green veil fades over the background. The heading lines rise out of their masks, followed by the eyebrow, intro and buttons, then the drive-cities panel with its rows one by one, then the “How the drive works” steps.
+3. The follow-through keeps playing faintly behind the content.
+
+Scrolling back above the strike hides the content again and replays the run-up. Hidden content cannot be clicked.
+
+The section's negative scroll margin makes the header, footer and hero badge links land on the content with the shot already taken. Keyboard focus inside the section also shows the content.
+
+With reduced motion or without scripting, the pre-roll is removed and the content is always visible over a still of the strike. Screen readers get the content in every state.
+
+The 48 frames are in `public/images/football-shot/` (960×640 WebP, about 3.1 MB in all). They load only as the section approaches, coarse frames first, so scrubbing works early on slow connections and sharpens as the rest arrive. The canvas is drawn at no more than 1.25× device pixels.
+
+The clip is illustrative. It was generated with **Higgsfield (Kling 3.0, pro mode, 5 s, no sound)** from `public/images/life-at-dgs/sports.webp` as the start image. The first 3.2 seconds were then exported as frames in headless Chrome. Generation prompt:
+
+> The teenage footballer keeps running for one stride, plants his left foot beside the ball and strikes it powerfully with his right foot in a clean shooting motion. The ball launches fast and low, flying away to the left and out of frame. He follows through with his kicking leg high and arms out for balance, then lands and watches the shot with a confident smile. Fixed static camera, no zoom, no pan, no cuts. Realistic athletic body mechanics, natural motion blur on the ball, sunlit school playing field, background buildings and trees stay still. No text, no logos.
+
+(The generated ball flies to the right and the camera eases in slightly; both suit the layout.)
+
+## North East family benefits
+
+The former boarding quote section is now “North East roots. Brighter horizons.” It presents four benefits for families considering DGS: CBSE learning, wider interests, friendships and everyday independence. An ivory layout, serif headings, sage accents and a forest-green admissions strip match the rest of the page. The North East student common-room illustration is reused from the school-life gallery; it is not a documentary photograph. The admissions button opens the existing enquiry dialog, and the `#boarding` anchor is retained for navigation. No region-specific discounts, travel services or other unverified concessions are promised.
+
+Screenshots: `artifacts/north-east-benefits-desktop.png` and `artifacts/north-east-benefits-mobile.png`.
+
+## Partners section campaign visual
+
+The partners section follows the supplied football-banner reference, with a fixed Doon Global logo at the centre of a circular programme orbit. Five equally spaced partner badges rotate once every 40 seconds using Tailwind’s built-in spin animation; matching reverse rotations keep the logos upright. Hover or keyboard focus pauses the orbit, and a pause/resume button provides manual control. Animation pauses off-screen and is disabled with reduced motion or without JavaScript. Programme clicks and keyboard navigation still open the existing detail panel. All styling uses Tailwind utilities, with no custom animation stylesheet. The illustrative photographic background was generated using the **built-in image generation tool** and saved at `public/images/partners-football.png`. The page footer and image alt text identify it as illustrative. Screenshots are saved at `artifacts/partners-desktop.png` and `artifacts/partners-mobile.png`.
+
+Final generation prompt:
+
+> Use case: ads-marketing. Asset type: a clean photographic background for a premium Indian school partners website banner. Create a very wide panoramic image in a 3:1 aspect ratio. On the far right, occupying only the rightmost 24 percent of the composition, show a full-body Indian schoolboy about 13 years old with neatly tousled black hair, playing football, looking down at a black-and-white football by his feet. He wears a dark navy and deep forest green school sports jersey with thin gold piping, dark navy shorts, long navy socks and black football boots. His entire head, both feet and the ball must be visible inside the frame with a little margin. Photorealistic candid sports campaign, late-afternoon golden sunlight, lush school playing field, leafy trees, subtle white clover flowers in the grass foreground. The left 70 percent of the wide image must remain empty dark deep-green soft-focus forest foliage and open shaded field, deliberately quiet and very dark to support live white headline text and partner badges overlaid in HTML. Background behind the boy glows warmly with filtered sunlight. Low camera viewpoint, premium cinematic quality, natural anatomy and facial features. No other people, no text, no typography, no circles or graphic overlays, no logos, no watermarks. This is one continuous photograph, not a website mockup or collage.
