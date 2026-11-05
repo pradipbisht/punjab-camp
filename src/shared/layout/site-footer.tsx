@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight, ArrowUp, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import FlipCopy from "@/shared/ui/flip-copy";
 import { ADMISSION_CITY_LABEL } from "@/shared/lib/enquiry";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
@@ -46,7 +47,12 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
         <div className={ui.invitation}>
           <div data-reveal>
             <p className={ui.eyebrow}><span aria-hidden="true" /> ADMISSIONS OPEN 2027–28</p>
-            <h2>Their next chapter. <em lang="hi" className="font-hindi">आइए शुरू करें।</em></h2>
+            <h2 data-no-split>
+              <FlipCopy interval={12000} className="w-full" label="Their next chapter. Let’s begin. ਉਹਨਾਂ ਦਾ ਅਗਲਾ ਅਧਿਆਇ। ਆਓ ਸ਼ੁਰੂ ਕਰੀਏ।" frames={[
+                <span>Their next chapter. <em>Let’s begin.</em></span>,
+                <span lang="pa" className="font-punjabi tracking-normal">ਉਹਨਾਂ ਦਾ ਅਗਲਾ ਅਧਿਆਇ। <em>ਆਓ ਸ਼ੁਰੂ ਕਰੀਏ।</em></span>,
+              ]} />
+            </h2>
             <p className={ui.invitationText}>Welcoming families from {ADMISSION_CITY_LABEL}.</p>
           </div>
           <div className={ui.admissions} data-reveal data-reveal-delay="1">

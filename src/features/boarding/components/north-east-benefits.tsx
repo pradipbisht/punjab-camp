@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight, Compass, GraduationCap, House, MapPin, Users } from "lucide-react";
+import FlipCopy from "@/shared/ui/flip-copy";
 import { ADMISSION_CITY_LABEL } from "@/shared/lib/enquiry";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
@@ -52,9 +53,14 @@ export default function NorthEastBenefits({ onEnquire }: { onEnquire: () => void
         <div className={ui.heading} data-reveal>
           <div>
             <p className={ui.eyebrow}><span aria-hidden="true" /> FOR FAMILIES IN PUNJAB</p>
-            <h2 id="north-east-heading"><span lang="pa" className="font-punjabi">ਪੰਜਾਬੀ ਜੜ੍ਹਾਂ।</span><br /><em lang="hi" className="font-hindi">उज्ज्वल क्षितिज।</em></h2>
+            <h2 id="north-east-heading" data-no-split>
+              <FlipCopy interval={12000} className="w-full" label="Punjabi roots. A brighter horizon. ਪੰਜਾਬੀ ਜੜ੍ਹਾਂ। ਇੱਕ ਉਜਲੀ ਦਿਸ਼ਾ।" frames={[
+                <span><span lang="pa" className="font-punjabi">ਪੰਜਾਬੀ ਜੜ੍ਹਾਂ।</span><br /><em>A brighter horizon.</em></span>,
+                <span lang="pa" className="font-punjabi tracking-normal">ਪੰਜਾਬੀ ਜੜ੍ਹਾਂ।<br /><em>ਇੱਕ ਉਜਲੀ ਦਿਸ਼ਾ।</em></span>,
+              ]} />
+            </h2>
           </div>
-          <p className={ui.introduction}>For families from {ADMISSION_CITY_LABEL}, discover what a new chapter at DGS can offer your child—inside and beyond the classroom. <span lang="hi" className="font-hindi">एक नया अध्याय।</span></p>
+          <p className={ui.introduction}>For families from {ADMISSION_CITY_LABEL}, discover what a new chapter at DGS can offer your child—inside and beyond the classroom.</p>
         </div>
 
         <div className={ui.content}>
@@ -67,7 +73,13 @@ export default function NorthEastBenefits({ onEnquire }: { onEnquire: () => void
               quality={90}
             />
             <span className={ui.location}><MapPin size={13} aria-hidden="true" /> A NEW CHAPTER IN DEHRADUN</span>
-            <figcaption><span>LEARN. CONNECT. GROW.</span><p lang="hi" className="font-hindi">सीखो. जुड़ो.<br /><em>बढ़ो.</em></p></figcaption>
+            <figcaption>
+              <span>LEARN. CONNECT. GROW.</span>
+              <FlipCopy interval={12000} className="font-serif text-[36px] leading-[1.04] tracking-[-.9px] max-[1100px]:text-[31px] max-[600px]:text-[29px]" label="Learn. Connect. Grow. ਸਿੱਖੋ। ਜੁੜੋ। ਵਧੋ।" frames={[
+                <span className="block">Learn. Connect.<br /><em>Grow.</em></span>,
+                <span lang="pa" className="block font-punjabi tracking-normal">ਸਿੱਖੋ। ਜੁੜੋ।<br /><em>ਵਧੋ।</em></span>,
+              ]} />
+            </figcaption>
           </figure>
 
           <div className={ui.benefits}>
@@ -85,8 +97,13 @@ export default function NorthEastBenefits({ onEnquire }: { onEnquire: () => void
           <div className={ui.nextStepCopy}>
             <span className={ui.nextStepIcon}><Compass size={27} strokeWidth={1.2} aria-hidden="true" /></span>
             <div>
-              <h3>A clearer next step, even from afar.</h3>
-              <p>Talk through classes, boarding, fees and a campus visit with admissions. <span lang="hi" className="font-hindi">चलिए बात करते हैं।</span></p>
+              <h3>
+                <FlipCopy interval={12000} className="w-full" label="A clearer next step, even from afar. ਦੂਰ ਤੋਂ ਵੀ, ਇੱਕ ਸਾਫ਼ ਅਗਲਾ ਕਦਮ।" frames={[
+                  <span>A clearer next step, even from afar.</span>,
+                  <span lang="pa" className="font-punjabi tracking-normal">ਦੂਰ ਤੋਂ ਵੀ, ਇੱਕ ਸਾਫ਼ ਅਗਲਾ ਕਦਮ।</span>,
+                ]} />
+              </h3>
+              <p>Talk through classes, boarding, fees and a campus visit with admissions.</p>
               <span className={ui.eligibility}>Boys’ boarding · Classes 3–12 · Dehradun</span>
             </div>
           </div>

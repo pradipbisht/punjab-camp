@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
+import FlipCopy from "@/shared/ui/flip-copy";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 // Cards rest in a loose, tilted collage (`--rest-y` staggers the columns); scripts fly them in from scattered positions as the page scrolls.
@@ -142,10 +143,18 @@ export default function SchoolLifeSection() {
         <div className={ui.heading} data-reveal>
           <div>
             <p className={ui.eyebrow}><span aria-hidden="true" /> LIFE AT DGS</p>
-            <h2 id="school-life-heading">A School Day<br />with Room for <em lang="hi" className="font-hindi">और भी।</em></h2>
+            <h2 id="school-life-heading" data-no-split>
+              <FlipCopy interval={12000} className="w-full" label="A School Day with Room for more. ਸਕੂਲ ਦਾ ਇੱਕ ਦਿਨ, ਹੋਰ ਕੁਝ ਲਈ ਥਾਂ।" frames={[
+                <span>A School Day<br />with Room for <em>more.</em></span>,
+                <span lang="pa" className="font-punjabi tracking-normal">ਸਕੂਲ ਦਾ ਇੱਕ ਦਿਨ<br /><em className="not-italic">ਹੋਰ ਕੁਝ ਲਈ ਥਾਂ।</em></span>,
+              ]} />
+            </h2>
           </div>
           <div className={ui.aside}>
-            <p className={ui.description}>At DGS, academics and a vibrant environment come together to help students grow with confidence.</p>
+            <FlipCopy interval={12000} className={ui.description} label="At DGS, academics and a vibrant environment come together to help students grow with confidence. ਡੀ.ਜੀ.ਐਸ. ਵਿਖੇ ਪੜ੍ਹਾਈ ਤੇ ਇੱਕ ਜੀਵੰਤ ਮਾਹੌਲ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਆਤਮਵਿਸ਼ਵਾਸ ਨਾਲ ਵਧਣ ਵਿੱਚ ਮਦਦ ਕਰਦੇ ਹਨ।" frames={[
+              <span className="block">At DGS, academics and a vibrant environment come together to help students grow with confidence.</span>,
+              <span lang="pa" className="block font-punjabi tracking-normal">ਡੀ.ਜੀ.ਐਸ. ਵਿਖੇ ਪੜ੍ਹਾਈ ਤੇ ਇੱਕ ਜੀਵੰਤ ਮਾਹੌਲ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਆਤਮਵਿਸ਼ਵਾਸ ਨਾਲ ਵਧਣ ਵਿੱਚ ਮਦਦ ਕਰਦੇ ਹਨ।</span>,
+            ]} />
             <a className={ui.explore} href="#programmes">Explore Life at DGS <ArrowRight size={17} aria-hidden="true" /></a>
           </div>
         </div>

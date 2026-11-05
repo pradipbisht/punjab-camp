@@ -184,7 +184,7 @@ try {
   const pauseSpotlight = page.getByRole('button', { name: 'Pause programme autoplay', exact: true });
   if (await pauseSpotlight.isVisible()) await pauseSpotlight.click();
   await page.getByRole('tab', { name: 'Bengaluru FC' }).click();
-  await page.getByRole('heading', { name: /Find your footballing feet|ਆਪਣੀ ਫੁੱਟਬਾਲ/ }).waitFor();
+  await page.getByRole('heading', { name: /Find your footballing feet|ਫੁੱਟਬਾਲ ਵਿੱਚ ਆਪਣਾ ਪੈਰ/ }).waitFor();
   await page.getByRole('tab', { name: 'Bengaluru FC' }).press('ArrowRight');
   await page.getByRole('heading', { name: /Clarity before the boards|ਬੋਰਡ ਤੋਂ ਪਹਿਲਾਂ/ }).waitFor();
   await page.mouse.move(0, 0);

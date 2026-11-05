@@ -2,6 +2,8 @@
 
 A responsive Next.js 16 + React + TypeScript + Tailwind CSS 4 landing page for families in Siliguri, North Bengal, Sikkim and North East India. The design follows the supplied campaign references: forest green, ivory, gold, editorial typography and a cinematic hero.
 
+Punjabi lines on the page, with English meanings, are listed in [`PUNJABI.md`](PUNJABI.md). Hindi in the header and hero is listed in [`HINDI.md`](HINDI.md).
+
 ## Run locally
 
 ```powershell
@@ -50,7 +52,7 @@ Feature folders live under `src/features/<name>/` with `components/`, and shared
 - `src/app/layout.tsx`: locally hosted fonts through `next/font/local`, Tailwind typography defaults and shared interaction utilities.
 - `src/features/hero`: campus hero, EducationWorld rankings, verified school facts and admissions entry point.
 - `src/features/admission-drive`: drive-city ticker, football shot, city schedule and four-step process. Drive dates and venues are edited in its `stops` list.
-- `src/features/why-dgs`: “From Punjab to a world of संभावनाओं” intro with campus photo and roundel.
+- `src/features/why-dgs`: “From Punjab to a world of possibilities” intro with campus photo and roundel.
 - `src/features/school-life`: “A School Day” scattered photo collage whose cards fly in from the sides as the page scrolls.
 - `src/features/boarding`: boarding benefits, eligibility and an admissions entry point.
 - `src/features/programmes`: sports banner, partner logos and programme cards.

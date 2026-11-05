@@ -2,6 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { ArrowUpRight, MessageCircle, Phone, Plus } from "lucide-react";
+import FlipCopy from "@/shared/ui/flip-copy";
 import { ADMISSION_CITY_LABEL } from "@/shared/lib/enquiry";
 
 const questions = [
@@ -57,8 +58,11 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
               <span className="h-px w-6 bg-[#b3945e]" aria-hidden="true" />
               A LITTLE CLARITY, A LITTLE CONFIDENCE
             </p>
-            <h2 id="faq-heading" className="text-[clamp(38px,3.7vw,52px)] leading-[1.06] tracking-[-1.5px] text-green max-[600px]:text-[39px] max-[370px]:text-[36px]">
-              Good questions.<br /><em lang="hi" className="font-hindi text-[#687552]">साफ़ शुरुआत।</em>
+            <h2 id="faq-heading" data-no-split className="text-[clamp(38px,3.7vw,52px)] leading-[1.06] tracking-[-1.5px] text-green max-[600px]:text-[39px] max-[370px]:text-[36px]">
+              <FlipCopy interval={12000} className="w-full" label="Good questions. A clear start. ਚੰਗੇ ਸਵਾਲ। ਸਾਫ਼ ਸ਼ੁਰੂਆਤ।" frames={[
+                <span>Good questions.<br /><em className="text-[#687552]">A clear start.</em></span>,
+                <span lang="pa" className="font-punjabi tracking-normal">ਚੰਗੇ ਸਵਾਲ।<br /><em className="text-[#687552]">ਸਾਫ਼ ਸ਼ੁਰੂਆਤ।</em></span>,
+              ]} />
             </h2>
           </div>
           <p className="max-w-[310px] pb-1 text-[16px] leading-[1.85] text-[#606c58] max-[760px]:mt-5 max-[760px]:max-w-[440px] max-[760px]:pb-0">
@@ -123,7 +127,7 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
             <div>
               <span className="mb-6 grid size-12 place-items-center rounded-full border border-[#dcc79340] bg-[#ffffff05] text-[#e5cc96] max-[600px]:mb-5"><MessageCircle size={23} strokeWidth={1.2} aria-hidden="true" /></span>
               <p className="mb-3 text-[12px] font-medium tracking-[1.6px] text-[#c6caa8]">SOME ANSWERS ARE PERSONAL.</p>
-              <h3 className="font-serif text-[34px] leading-[1.08] tracking-[-.7px] max-[600px]:text-[32px]">Still have<br /><em lang="hi" className="font-hindi not-italic text-[#e4cb94]">कोई सवाल?</em></h3>
+              <h3 className="font-serif text-[34px] leading-[1.08] tracking-[-.7px] max-[600px]:text-[32px]">Still have<br /><em className="not-italic text-[#e4cb94]">a question?</em></h3>
               <p className="mt-4 text-[15px] leading-[1.85] text-[#c0cfb9]">Every child’s journey is different. Let’s talk through what matters to your family.</p>
             </div>
             <div className="mt-6 max-[900px]:self-center max-[900px]:mt-0 max-[600px]:mt-6">

@@ -3,9 +3,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 
 // Holds stacked frames at a shared height and crossfades them so bilingual lines stay readable.
-export default function FlipCopy({ frames, interval = 5600, className = "", label }: { frames: ReactNode[]; interval?: number; className?: string; label?: string }) {
+export default function FlipCopy({ frames, interval = 10000, className = "", label }: { frames: ReactNode[]; interval?: number; className?: string; label?: string }) {
   const [index, setIndex] = useState(0);
   const [reduce, setReduce] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -16,7 +17,7 @@ export default function FlipCopy({ frames, interval = 5600, className = "", labe
   }, []);
 
   useEffect(() => {
-    if (frames.length < 2) return;
+    if (frames.length < 2 || paused) return;
     let timer = 0;
     function tick() {
       if (!document.hidden) setIndex(current => (current + 1) % frames.length);
@@ -24,12 +25,19 @@ export default function FlipCopy({ frames, interval = 5600, className = "", labe
     }
     timer = window.setTimeout(tick, interval);
     return () => window.clearTimeout(timer);
-  }, [frames.length, interval]);
+  }, [frames.length, interval, paused]);
 
   return (
     <>
       {label ? <span className="sr-only">{label}</span> : null}
-      <span className={`grid ${className}`} aria-hidden={label ? true : undefined}>
+      <span
+        className={`grid ${className}`}
+        aria-hidden={label ? true : undefined}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
         {frames.map((frame, frameIndex) => {
           const on = frameIndex === index;
           return (

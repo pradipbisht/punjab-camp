@@ -65,17 +65,21 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
             <span className="sr-only">A brighter future.</span>
           </h1>
           <FlipCopy
-            interval={5600}
+            interval={10000}
             className="w-full"
-            label="A brighter future. From Punjab to Dehradun. A CBSE boarding school where your child learns, belongs and becomes."
+            label="A brighter future. From Punjab to Dehradun. A CBSE boarding school where your child learns, belongs and becomes. ਇੱਕ ਉਜਲਾ ਭਵਿੱਖ। ਪੰਜਾਬ ਤੋਂ ਦੇਹਰਾਦੂਨ। ਇੱਕ ਸੀ.ਬੀ.ਐਸ.ਈ. ਬੋਰਡਿੰਗ ਸਕੂਲ ਜਿੱਥੇ ਤੁਹਾਡਾ ਬੱਚਾ ਸਿੱਖਦਾ ਹੈ, ਆਪਣਾ ਪਾਉਂਦਾ ਹੈ ਤੇ ਨਿਖਰਦਾ ਹੈ। एक उज्ज्वल भविष्य। पंजाब से देहरादून। एक सी.बी.एस.ई. बोर्डिंग स्कूल जहाँ आपका बच्चा सीखता है, अपनापन पाता है और निखरता है।"
             frames={[
               <span className="block">
                 <span className={`${ui.subLine} text-[#64754f]`}><em className={ui.titleText}>A brighter future.</em></span>
-                <span className={`${ui.description} block`}>From Punjab to Dehradun. A CBSE boarding school where your child learns, belongs and becomes.<br className={ui.desktopBreak} /> <span lang="hi" className="font-hindi">घर से दूर, परिवार जैसा घर।</span></span>
+                <span className={`${ui.description} block`}>From Punjab to Dehradun. A CBSE boarding school where your child learns, belongs and becomes.</span>
               </span>,
               <span className="block">
                 <span className={`${ui.subLine} font-punjabi tracking-normal text-[var(--color-green)]`} lang="pa"><span className={ui.titleText}>ਇੱਕ ਉਜਲਾ ਭਵਿੱਖ।</span></span>
-                <span lang="pa" className={`${ui.description} font-punjabi block`}>ਪੰਜਾਬ ਤੋਂ ਦੇਹਰਾਦੂਨ। ਇੱਕ ਸੀ.ਬੀ.ਐਸ.ਈ. ਬੋਰਡਿੰਗ ਸਕੂਲ ਜਿੱਥੇ ਤੁਹਾਡਾ ਬੱਚਾ ਸਿੱਖਦਾ ਹੈ, ਵਿਚਰਦਾ ਹੈ ਤੇ ਵਿਕਸਿਤ ਹੁੰਦਾ ਹੈ।</span>
+                <span lang="pa" className={`${ui.description} font-punjabi block`}>ਪੰਜਾਬ ਤੋਂ ਦੇਹਰਾਦੂਨ। ਇੱਕ ਸੀ.ਬੀ.ਐਸ.ਈ. ਬੋਰਡਿੰਗ ਸਕੂਲ ਜਿੱਥੇ ਤੁਹਾਡਾ ਬੱਚਾ ਸਿੱਖਦਾ ਹੈ, ਆਪਣਾ ਪਾਉਂਦਾ ਹੈ ਤੇ ਨਿਖਰਦਾ ਹੈ।</span>
+              </span>,
+              <span className="block">
+                <span className={`${ui.subLine} font-hindi tracking-normal text-[#5f6d48]`} lang="hi"><span className={ui.titleText}>एक उज्ज्वल भविष्य।</span></span>
+                <span lang="hi" className={`${ui.description} font-hindi block`}>पंजाब से देहरादून। एक सी.बी.एस.ई. बोर्डिंग स्कूल जहाँ आपका बच्चा सीखता है, अपनापन पाता है और निखरता है।</span>
               </span>,
             ]}
           />
@@ -96,8 +100,13 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
             <button className={ui.enquireButton} onClick={onEnquire} aria-haspopup="dialog">Enquire for 2027–28 <ArrowRight size={17} /></button>
             <a href="#why-dgs" className={ui.campusLink}>Discover DGS <ArrowUpRight size={17} /></a>
           </div>
-          <p className={ui.familyNote}><ShieldCheck size={14} /> Boys’ boarding · Classes 3–12</p>
-          <p className="mt-3 hidden items-center gap-2 text-[13px] text-[#626c56] max-[700px]:flex"><MapPin size={14} aria-hidden="true" /> Dehradun, Uttarakhand · <span lang="hi" className="font-hindi">एक सुंदर शहर</span></p>
+          <p className={ui.familyNote}><ShieldCheck size={14} />
+            <FlipCopy interval={12000} label="Boys’ boarding · Classes 3–12. ਮੁੰਡਿਆਂ ਦੀ ਬੋਰਡਿੰਗ · ਕਲਾਸ 3–12" frames={[
+              <span>Boys’ boarding · Classes 3–12</span>,
+              <span lang="pa" className="font-punjabi tracking-normal">ਮੁੰਡਿਆਂ ਦੀ ਬੋਰਡਿੰਗ · ਕਲਾਸ 3–12</span>,
+            ]} />
+          </p>
+          <p className="mt-3 hidden items-center gap-2 text-[13px] text-[#626c56] max-[700px]:flex"><MapPin size={14} aria-hidden="true" /> Dehradun, Uttarakhand</p>
         </div>
 
       </div>
@@ -116,7 +125,10 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
     </div>
 
     <div className={ui.facts}><div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.factsInner}`}>
-      <p>Rooted in values.<br /><em lang="hi" className="font-hindi">कल की ओर बढ़ते हुए।</em></p>
+      <FlipCopy interval={12000} className="max-[900px]:hidden" label="Rooted in values. Growing towards tomorrow. ਮੁੱਲਾਂ ਵਿੱਚ ਜੜ੍ਹਾਂ। ਭਲਕੇ ਵੱਲ ਵਾਧਾ।" frames={[
+        <span className="block font-serif text-[19px] leading-[1.4] max-[1150px]:text-[16px]">Rooted in values.<br /><em className="text-[#6b7456] text-[16px] max-[1150px]:text-[17px]">Growing towards tomorrow.</em></span>,
+        <span lang="pa" className="block font-punjabi font-serif text-[19px] leading-[1.4] max-[1150px]:text-[16px]">ਮੁੱਲਾਂ ਵਿੱਚ ਜੜ੍ਹਾਂ।<br /><em className="text-[#6b7456] text-[16px] max-[1150px]:text-[17px]">ਭਲਕੇ ਵੱਲ ਵਾਧਾ।</em></span>,
+      ]} />
       <div className={ui.fact}><BookOpen /><div><strong>Since 1998</strong><span>A legacy of learning</span></div></div>
       <div className={ui.fact}><ShieldCheck /><div><strong>CBSE</strong><span>Affiliated curriculum · 28 years</span></div></div>
       <div className={ui.fact}><GraduationCap /><div><strong>Classes 3–12</strong><span>Boys’ boarding in Dehradun</span></div></div>

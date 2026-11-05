@@ -1,4 +1,5 @@
 import { ADMISSION_CITY_LABEL, DRIVE_CITIES } from "@/shared/lib/enquiry";
+import FlipCopy from "@/shared/ui/flip-copy";
 import MaskedHeading from "./masked-heading";
 import map from "../data/punjab-map.json";
 
@@ -21,9 +22,9 @@ const ui: Record<string, string> = {
 };
 
 const stages = [
-  { title: "Punjab", copy: "A state, not a pin on a map — the journey begins in your city, in your language." },
-  { title: "The road east", copy: "One clear corridor from the Punjab plains into Uttarakhand, a few hours to the Doon valley." },
-  { title: "Dehradun", copy: "A city in Uttarakhand. Chakrata Road. A boarding campus among the trees." },
+  { title: "Punjab", punjabiTitle: "ਪੰਜਾਬ", copy: "A state, not a pin on a map — the journey begins in your city, in your language.", punjabiCopy: "ਇੱਕ ਰਾਜ, ਨਕਸ਼ੇ ਉੱਤੇ ਇੱਕ ਬਿੰਦੂ ਨਹੀਂ — ਸਫ਼ਰ ਤੁਹਾਡੇ ਸ਼ਹਿਰ ਵਿੱਚ, ਤੁਹਾਡੀ ਭਾਸ਼ਾ ਵਿੱਚ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ।" },
+  { title: "The road east", punjabiTitle: "ਪੂਰਬ ਵੱਲ ਦਾ ਰਾਹ", copy: "One clear corridor from the Punjab plains into Uttarakhand, a few hours to the Doon valley.", punjabiCopy: "ਪੰਜਾਬ ਦੇ ਮੈਦਾਨਾਂ ਤੋਂ ਉੱਤਰਾਖੰਡ ਤੱਕ ਇੱਕ ਸਾਫ਼ ਰਾਹ, ਦੂਨ ਘਾਟੀ ਤੱਕ ਕੁਝ ਘੰਟੇ।" },
+  { title: "Dehradun", punjabiTitle: "ਦੇਹਰਾਦੂਨ", copy: "A city in Uttarakhand. Chakrata Road. A boarding campus among the trees.", punjabiCopy: "ਉੱਤਰਾਖੰਡ ਦਾ ਇੱਕ ਸ਼ਹਿਰ। ਚਕਰਾਤਾ ਰੋਡ। ਰੁੱਖਾਂ ਵਿਚਕਾਰ ਇੱਕ ਬੋਰਡਿੰਗ ਕੈਂਪਸ।" },
 ];
 
 const trunk = `M${map.hub.x} ${map.hub.y} C ${map.hub.x + 52} ${map.hub.y + 8}, ${map.dehradun.x - 48} ${map.dehradun.y - 18}, ${map.dehradun.x} ${map.dehradun.y}`;
@@ -33,7 +34,12 @@ export default function JourneySection() {
     <section className={ui.section} aria-labelledby="journey-heading">
       <div className="dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)]">
         <div className={ui.title} data-reveal data-no-split>
-          <p className={ui.eyebrow}><span />DIFFERENT PLACES. ONE SHARED DREAM.</p>
+          <p className={ui.eyebrow}><span />
+            <FlipCopy interval={12000} label="Different places. One shared dream. ਵੱਖ-ਵੱਖ ਥਾਵਾਂ। ਇੱਕ ਸਾਂਝਾ ਸੁਪਨਾ।" frames={[
+              <span className="tracking-[1.9px]">DIFFERENT PLACES. ONE SHARED DREAM.</span>,
+              <span lang="pa" className="font-punjabi tracking-normal">ਵੱਖ-ਵੱਖ ਥਾਵਾਂ। ਇੱਕ ਸਾਂਝਾ ਸੁਪਨਾ।</span>,
+            ]} />
+          </p>
           <MaskedHeading
             id="journey-heading"
             text="Punjab to Dehradun"
@@ -114,15 +120,28 @@ export default function JourneySection() {
         </div>
 
         <div className={ui.copy} data-reveal data-reveal-delay="1">
-          <p>Your roots stay with you. <em lang="hi" className="font-hindi not-italic text-[#697550]">दुनिया और बड़ी हो जाती है।</em> For families from {ADMISSION_CITY_LABEL} — a clear road from the state of Punjab to a boarding campus in Dehradun, Uttarakhand.</p>
+          <FlipCopy interval={14000} className="block max-w-[520px] text-[16px] leading-[1.75] text-[#5c6754]" label={`Your roots stay with you. The world grows wider. For families from ${ADMISSION_CITY_LABEL}. ਤੁਹਾਡੀਆਂ ਜੜ੍ਹਾਂ ਤੁਹਾਡੇ ਨਾਲ ਰਹਿੰਦੀਆਂ ਹਨ। ਦੁਨੀਆ ਹੋਰ ਵਿਸ਼ਾਲ ਹੁੰਦੀ ਹੈ।`} frames={[
+            <span className="block">Your roots stay with you. <em className="not-italic text-[#697550]">The world grows wider.</em> For families from {ADMISSION_CITY_LABEL} — a clear road from the state of Punjab to a boarding campus in Dehradun, Uttarakhand.</span>,
+            <span lang="pa" className="block font-punjabi tracking-normal">ਤੁਹਾਡੀਆਂ ਜੜ੍ਹਾਂ ਤੁਹਾਡੇ ਨਾਲ ਰਹਿੰਦੀਆਂ ਹਨ। <em className="not-italic text-[#697550]">ਦੁਨੀਆ ਹੋਰ ਵਿਸ਼ਾਲ ਹੁੰਦੀ ਹੈ।</em> {ADMISSION_CITY_LABEL} ਦੇ ਪਰਿਵਾਰਾਂ ਲਈ — ਪੰਜਾਬ ਤੋਂ ਦੇਹਰਾਦੂਨ ਦੇ ਬੋਰਡਿੰਗ ਕੈਂਪਸ ਤੱਕ ਇੱਕ ਸਾਫ਼ ਰਾਹ।</span>,
+          ]} />
           <ol className={ui.steps}>
             {stages.map((stage, index) => (
               <li key={stage.title} className={`group/step ${ui.step}`}>
                 <span className={ui.index} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 {index < stages.length - 1 && <i className={ui.rail} aria-hidden="true" />}
                 <div>
-                  <strong className={ui.stepTitle}>{stage.title}</strong>
-                  <p className={ui.stepCopy}>{stage.copy}</p>
+                  <strong className={ui.stepTitle}>
+                    <FlipCopy interval={14000} label={`${stage.title}. ${stage.punjabiTitle}.`} frames={[
+                      <span>{stage.title}</span>,
+                      <span lang="pa" className="font-punjabi tracking-normal">{stage.punjabiTitle}</span>,
+                    ]} />
+                  </strong>
+                  <p className={ui.stepCopy}>
+                    <FlipCopy interval={14000} label={`${stage.copy} ${stage.punjabiCopy}`} frames={[
+                      <span>{stage.copy}</span>,
+                      <span lang="pa" className="font-punjabi tracking-normal">{stage.punjabiCopy}</span>,
+                    ]} />
+                  </p>
                 </div>
               </li>
             ))}

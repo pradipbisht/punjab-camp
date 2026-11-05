@@ -64,31 +64,31 @@ const spokes = [
 
 const programmes = [
   {
-    name: "Goalkeepers", hindi: "पहला कदम", punjabiName: "ਗੋਲਕੀਪਰਜ਼ · ਪਹਿਲਾ ਕਦਮ", image: "goalkeepers.webp", position: "goalkeepers",
+    name: "Goalkeepers", punjabiName: "ਗੋਲਕੀਪਰਜ਼ · ਪਹਿਲਾ ਕਦਮ", image: "goalkeepers.webp", position: "goalkeepers",
     label: "A thoughtful first step", punjabiLabel: "ਇੱਕ ਸੋਚਿਆ-ਸਮਝਿਆ ਪਹਿਲਾ ਕਦਮ",
     description: "DGS’s own pre-admission programme helps families understand a child’s strengths and next steps, beyond a score.",
-    punjabiDescription: "ਡੀ.ਜੀ.ਐਸ. ਦਾ ਐਡਮਿਸ਼ਨ ਤੋਂ ਪਹਿਲਾਂ ਪ੍ਰੋਗਰਾਮ ਪਰਿਵਾਰਾਂ ਨੂੰ ਬੱਚੇ ਦੀਆਂ ਤਾਕਤਾਂ ਅਤੇ ਅਗਲਾ ਕਦਮ ਸਮਝਣ ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ।",
+    punjabiDescription: "ਡੀ.ਜੀ.ਐਸ. ਦਾ ਐਡਮਿਸ਼ਨ ਤੋਂ ਪਹਿਲਾਂ ਵਾਲਾ ਪ੍ਰੋਗਰਾਮ ਪਰਿਵਾਰਾਂ ਨੂੰ ਬੱਚੇ ਦੀਆਂ ਤਾਕਤਾਂ ਅਤੇ ਅਗਲੇ ਕਦਮ ਨੂੰ ਸਮਝਣ ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ।",
     link: "https://doonglobalschool.edu.in/programmes/",
   },
   {
-    name: "Bengaluru FC", hindi: "फ़ुटबॉल", punjabiName: "ਬੈਂਗਲੁਰੂ ਐਫ.ਸੀ. · ਫੁੱਟਬਾਲ", image: "bfc-soccer-schools-stacked.webp", position: "bengaluru",
-    label: "Find your footballing feet", punjabiLabel: "ਆਪਣੀ ਫੁੱਟਬਾਲ ਪਛਾਣ ਲੱਭੋ",
+    name: "Bengaluru FC", punjabiName: "ਬੈਂਗਲੁਰੂ ਐਫ.ਸੀ. · ਫੁੱਟਬਾਲ", image: "bfc-soccer-schools-stacked.webp", position: "bengaluru",
+    label: "Find your footballing feet", punjabiLabel: "ਫੁੱਟਬਾਲ ਵਿੱਚ ਆਪਣਾ ਪੈਰ ਜਮਾਓ",
     description: "A connection with Bengaluru FC Soccer Schools brings a dedicated football programme into the conversation.",
-    punjabiDescription: "ਬੈਂਗਲੁਰੂ ਐਫ.ਸੀ. ਸਾਕਰ ਸਕੂਲਜ਼ ਨਾਲ ਜੁੜਿਆ ਇੱਕ ਫੁੱਟਬਾਲ ਪ੍ਰੋਗਰਾਮ ਗੱਲਬਾਤ ਵਿੱਚ ਆਉਂਦਾ ਹੈ।",
+    punjabiDescription: "ਬੈਂਗਲੁਰੂ ਐਫ.ਸੀ. ਸਾਕਰ ਸਕੂਲਜ਼ ਨਾਲ ਜੁੜਿਆ ਇੱਕ ਫੁੱਟਬਾਲ ਪ੍ਰੋਗਰਾਮ ਵਿਦਿਆਰਥੀਆਂ ਲਈ ਹੈ।",
     link: "https://bfcsoccerschools.com/",
   },
   {
-    name: "Prayaas", hindi: "बोर्ड से पहले", punjabiName: "ਪ੍ਰਯਾਸ · ਬੋਰਡ ਤੋਂ ਪਹਿਲਾਂ", image: "prayaas.webp", position: "prayaas",
+    name: "Prayaas", punjabiName: "ਪ੍ਰਯਾਸ · ਬੋਰਡ ਤੋਂ ਪਹਿਲਾਂ", image: "prayaas.webp", position: "prayaas",
     label: "Clarity before the boards", punjabiLabel: "ਬੋਰਡ ਤੋਂ ਪਹਿਲਾਂ ਸਾਫ਼ ਤਸਵੀਰ",
     description: "Independent CBSE mock-board assessments help senior students understand what to focus on next.",
     punjabiDescription: "ਸੁਤੰਤਰ ਸੀ.ਬੀ.ਐਸ.ਈ. ਮੌਕ ਬੋਰਡ ਅਸੈਸਮੈਂਟ ਸੀਨੀਅਰ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਦੱਸਦੇ ਹਨ ਕਿ ਅੱਗੇ ਕਿਸ ਉੱਤੇ ਧਿਆਨ ਦੇਣਾ ਹੈ।",
     link: "https://prayaassessments.com/",
   },
   {
-    name: "Kidnasium", hindi: "हरकत की ख़ुशी", punjabiName: "ਕਿਡਨੇਜ਼ੀਅਮ · ਹਰਕਤ ਦੀ ਖੁਸ਼ੀ", image: "kidnasium.webp", position: "kidnasium",
+    name: "Kidnasium", punjabiName: "ਕਿਡਨੇਜ਼ੀਅਮ · ਹਰਕਤ ਦੀ ਖੁਸ਼ੀ", image: "kidnasium.webp", position: "kidnasium",
     label: "The joy of moving", punjabiLabel: "ਹਰਕਤ ਦੀ ਖੁਸ਼ੀ",
     description: "Discover an approach to movement, fitness and physical confidence through the school’s Kidnasium association.",
-    punjabiDescription: "ਸਕੂਲ ਦੀ ਕਿਡਨੇਜ਼ੀਅਮ ਸਾਂਝ ਰਾਹੀਂ ਹਰਕਤ, ਫਿਟਨੈਸ ਅਤੇ ਸਰੀਰਕ ਵਿਸ਼ਵਾਸ ਲੱਭੋ।",
+    punjabiDescription: "ਸਕੂਲ ਦੀ ਕਿਡਨੇਜ਼ੀਅਮ ਸਾਂਝ ਰਾਹੀਂ ਹਰਕਤ, ਫਿਟਨੈਸ ਅਤੇ ਸਰੀਰਕ ਆਤਮਵਿਸ਼ਵਾਸ ਲੱਭੋ।",
     link: "https://kidnasium.in/",
   },
 ];
@@ -140,12 +140,15 @@ export default function PartnersSection() {
           <div className={ui.copy} data-reveal data-no-split>
             <p className={ui.eyebrow}><span aria-hidden="true">⟶</span> OUR PARTNERS IN STUDENT GROWTH</p>
             <h2 id="partners-heading" data-no-split>
-              <FlipCopy interval={6200} label="Learning beyond the classroom. ਕਲਾਸ ਤੋਂ ਅੱਗੇ। कक्षा से आगे।" frames={[
+              <FlipCopy interval={10000} label="Learning beyond the classroom. ਕਲਾਸ ਤੋਂ ਅੱਗੇ।" frames={[
                 <span>Learning<br />Beyond<br /><em className="not-italic">the classroom.</em></span>,
-                <span><em lang="pa" className="font-punjabi not-italic">ਕਲਾਸ ਤੋਂ ਅੱਗੇ।</em><br /><em lang="hi" className="font-hindi not-italic">कक्षा से आगे।</em></span>,
+                <span lang="pa" className="font-punjabi">ਕਲਾਸ ਤੋਂ<br /><em className="not-italic">ਅੱਗੇ।</em></span>,
               ]} />
             </h2>
-            <p className={ui.description}>Organisations we work alongside to widen<br className={ui.desktopBreak} /> what students can do beyond the classroom.</p>
+            <FlipCopy interval={12000} className={ui.description} label="Organisations we work alongside to widen what students can do beyond the classroom. ਕਲਾਸ ਤੋਂ ਅੱਗੇ ਵਿਦਿਆਰਥੀ ਕੀ ਕਰ ਸਕਦੇ ਹਨ, ਇਹ ਵਧਾਉਣ ਲਈ ਅਸੀਂ ਸਾਥੀ ਸੰਸਥਾਵਾਂ ਨਾਲ ਕੰਮ ਕਰਦੇ ਹਾਂ।" frames={[
+              <span className="block">Organisations we work alongside to widen<br className={ui.desktopBreak} /> what students can do beyond the classroom.</span>,
+              <span lang="pa" className="block font-punjabi tracking-normal">ਕਲਾਸ ਤੋਂ ਅੱਗੇ ਵਿਦਿਆਰਥੀ ਕੀ ਕਰ ਸਕਦੇ ਹਨ,<br className={ui.desktopBreak} /> ਇਹ ਵਧਾਉਣ ਲਈ ਅਸੀਂ ਸਾਥੀ ਸੰਸਥਾਵਾਂ ਨਾਲ ਕੰਮ ਕਰਦੇ ਹਾਂ।</span>,
+            ]} />
             <p className={ui.hint}>Each partner, a path beyond the classroom <ArrowRight size={14} aria-hidden="true" /></p>
           </div>
 
@@ -212,7 +215,6 @@ export default function PartnersSection() {
           <p className={ui.note}>
             <span className="mb-2.5 block font-sans text-[11px] font-semibold not-italic tracking-[2px] text-[#d6b877]">PUNJAB · DGS</span>
             A stronger<br />tomorrow for<br />every young boy.
-            <em lang="hi" className="font-hindi mt-2.5 block text-[18px] not-italic text-[#edd6a4]">एक मज़बूत कल।</em>
           </p>
         </div>
       </div>
@@ -257,9 +259,9 @@ export default function PartnersSection() {
                       <span className={ui.cardIndex}>0{index + 1}</span>
                       <span className={ui.cardLogoWrap}><Image src={`/images/${programme.image}`} alt="" width={72} height={40} className={ui.cardLogo} /></span>
                     </span>
-                    <FlipCopy interval={7600} className="w-full" label={`${programme.name}. ${programme.label}. ${programme.description}`} frames={[
+                    <FlipCopy interval={16000} className="w-full" label={`${programme.name}. ${programme.label}. ${programme.description}. ${programme.punjabiName}. ${programme.punjabiLabel}. ${programme.punjabiDescription}`} frames={[
                       <span className="block">
-                        <span className={`block ${ui.cardName}`}>{programme.name} · <span lang="hi" className="font-hindi tracking-normal">{programme.hindi}</span></span>
+                        <span className={`block ${ui.cardName}`}>{programme.name}</span>
                         <span className={`block ${ui.cardTitle}`}>{programme.label}</span>
                         <span className={`block ${ui.cardCopy}`}>{programme.description}</span>
                       </span>,

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ArrowUpRight, CalendarDays, ChevronDown, Phone } from "lucide-react";
+import FlipCopy from "@/shared/ui/flip-copy";
 import { ADMISSION_CITY_LABEL, DRIVE_CITIES, type EnquiryPreset } from "@/shared/lib/enquiry";
 
 export type { EnquiryPreset };
@@ -67,7 +68,13 @@ const clamp = (value: number) => Math.min(1, Math.max(0, value));
 export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: (preset: EnquiryPreset) => void; onEnquire: () => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const tickerItems = [{ text: "PUNJAB ADMISSION DRIVE · 2027–28", label: true }, ...stops.map(({ city }) => ({ text: city, label: false })), { text: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਖੁੱਲ੍ਹੀਆਂ", label: true }];
+  const tickerItems = [
+    { text: "PUNJAB ADMISSION DRIVE · 2027–28", label: true },
+    ...stops.map(({ city }) => ({ text: city, label: false })),
+    { text: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਖੁੱਲ੍ਹੀ ਹੈ", label: true, lang: "pa" as const },
+    { text: "ਘਰੋਂ ਨੇੜੇ", label: true, lang: "pa" as const },
+    { text: "ਪੰਜਾਬੀ ਜੜ੍ਹਾਂ", label: true, lang: "pa" as const },
+  ];
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -134,7 +141,7 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
     <>
     <div className={ui.ticker} aria-hidden="true">
       <div className={ui.tickerTrack}>
-        {[0, 1, 2].map(copy => <div className={ui.tickerGroup} key={copy}>{tickerItems.map(({ text, label }, index) => <span key={text}>{label ? <b>{text}</b> : <em data-tone={index % 2 ? undefined : "gold"}>{text}</em>}<i /></span>)}</div>)}
+        {[0, 1, 2].map(copy => <div className={ui.tickerGroup} key={copy}>{tickerItems.map(({ text, label, lang }, index) => <span key={text}>{label ? <b lang={lang} className={lang === "pa" ? "font-punjabi tracking-normal" : undefined}>{text}</b> : <em data-tone={index % 2 ? undefined : "gold"}>{text}</em>}<i /></span>)}</div>)}
       </div>
     </div>
     <section ref={sectionRef} className={ui.section} id="admission-drive" aria-labelledby="admission-drive-heading" data-no-split data-shot="before">
@@ -156,9 +163,14 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
       <div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.content}`}>
         <div className={ui.layout}>
           <div className={ui.intro}>
-            <p className={`${ui.eyebrow} ${enter}`}><span aria-hidden="true" /> <span lang="hi" className="font-hindi tracking-normal">पंजाब एडमिशन ड्राइव</span> · 2027–28</p>
-            <h2 id="admission-drive-heading"><span className={ui.line}><span>Meet DGS admissions,</span></span><br /><span className={ui.line}><em lang="hi" className="font-hindi" style={{ transitionDelay: "90ms" }}>घर के करीब।</em></span></h2>
-            <p className={enter} style={{ transitionDelay: "140ms" }}>The admissions team is meeting families in {ADMISSION_CITY_LABEL}. Register for your city and we’ll share the venue, date and time once confirmed. <span lang="pa" className="font-punjabi">ਘਰੋਂ ਨੇੜੇ।</span></p>
+            <p className={`${ui.eyebrow} ${enter}`}><span aria-hidden="true" /> PUNJAB ADMISSION DRIVE · 2027–28</p>
+            <h2 id="admission-drive-heading">
+              <FlipCopy interval={12000} className="w-full" label={`Meet DGS admissions, closer to home. ਡੀ.ਜੀ.ਐਸ. ਐਡਮਿਸ਼ਨ ਟੀਮ ਨੂੰ ਮਿਲੋ, ਘਰੋਂ ਨੇੜੇ।`} frames={[
+                <span className="block"><span className={ui.line}><span>Meet DGS admissions,</span></span><br /><span className={ui.line}><em style={{ transitionDelay: "90ms" }}>closer to home.</em></span></span>,
+                <span className="block font-punjabi tracking-normal" lang="pa"><span className={ui.line}><span>ਡੀ.ਜੀ.ਐਸ. ਐਡਮਿਸ਼ਨ ਟੀਮ ਨੂੰ ਮਿਲੋ,</span></span><br /><span className={ui.line}><em style={{ transitionDelay: "90ms" }}>ਘਰੋਂ ਨੇੜੇ।</em></span></span>,
+              ]} />
+            </h2>
+            <p className={enter} style={{ transitionDelay: "140ms" }}>The admissions team is meeting families in {ADMISSION_CITY_LABEL}. Register for your city and we’ll share the venue, date and time once confirmed.</p>
             <div className={`${ui.actions} ${enter}`} style={{ transitionDelay: "240ms" }}>
               <button className={ui.register} onClick={onEnquire} aria-haspopup="dialog">Register your interest <ArrowUpRight size={18} aria-hidden="true" /></button>
               <a className={ui.call} href="tel:+917455997333"><Phone size={16} aria-hidden="true" /> +91 74559 97333</a>
@@ -166,7 +178,7 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
           </div>
 
           <div className={ui.panel}>
-            <div className={ui.panelHead}><span>DRIVE CITIES · 2027–28</span><span className={ui.status}><span aria-hidden="true" /> <span lang="pa" className="font-punjabi tracking-normal">ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਖੁੱਲ੍ਹੀਆਂ</span></span></div>
+            <div className={ui.panelHead}><span>DRIVE CITIES · 2027–28</span><span className={ui.status}><span aria-hidden="true" /> <span lang="pa" className="font-punjabi tracking-normal">ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਖੁੱਲ੍ਹੀ ਹੈ</span></span></div>
             <ul className={ui.stops} aria-label="Admission drive cities">
               {stops.map(({ city, date, venue }, index) => (
                 <li key={city} style={{ transitionDelay: `${300 + index * 70}ms` }}>
@@ -180,8 +192,11 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
             </ul>
             <div className={ui.elsewhere}>
               <div>
-                <p>Questions about <em lang="hi" className="font-hindi">दाखिला अभियान?</em></p>
-                <p>Speak with our team about your city’s session.</p>
+                <FlipCopy interval={12000} className="font-serif text-[21px] leading-[1.2] [&_em]:text-[#687552]" label="Questions about the admission drive? ਐਡਮਿਸ਼ਨ ਡਰਾਈਵ ਬਾਰੇ ਸਵਾਲ ਹਨ?" frames={[
+                  <span className="block">Questions about <em>the admission drive?</em></span>,
+                  <span lang="pa" className="block font-punjabi tracking-normal">ਐਡਮਿਸ਼ਨ ਡਰਾਈਵ <em>ਬਾਰੇ ਸਵਾਲ ਹਨ?</em></span>,
+                ]} />
+                <p className="mt-1 text-[14px] leading-[1.5] text-[#55634f]">Speak with our team about your city’s session.</p>
               </div>
               <button className={ui.talk} onClick={onEnquire} aria-haspopup="dialog">Talk to admissions <ArrowUpRight size={16} aria-hidden="true" /></button>
             </div>

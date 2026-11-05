@@ -103,8 +103,8 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
         <div className={ui.asideContent}>
           <Image className={ui.logo} src="/images/logo-white.webp" alt="Doon Global School" width={105} height={77} />
           <div className={ui.asideHeading}>
-            <p className={ui.asideEyebrow}><span lang="hi" className="font-hindi tracking-normal">पंजाब से।</span><br />TOWARDS NEW POSSIBILITIES.</p>
-            <h3>A bigger world.<br /><em lang="hi" className="font-hindi">एक उज्ज्वल भविष्य।</em></h3>
+            <p className={ui.asideEyebrow}>FROM PUNJAB.<br />TOWARDS NEW POSSIBILITIES.</p>
+            <h3>A bigger world.<br /><em>A brighter future.</em></h3>
             <p className={ui.asideIntro}>A new chapter in Dehradun.<br />A place to learn, belong and grow.</p>
           </div>
           <div className={ui.asideFoot}><span><MapPin size={12} aria-hidden="true" /> DEHRADUN, UTTARAKHAND</span><a href="tel:+917455997333"><Phone size={14} aria-hidden="true" /> +91 74559 97333 <ArrowRight size={14} aria-hidden="true" /></a></div>
@@ -114,7 +114,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
       <div className={ui.panel}>
         <div className={ui.header}>
           <p className={ui.kicker}><span aria-hidden="true" /> ADMISSIONS OPEN 2027–28</p>
-          <h2>Let’s start with<br /><em lang="hi" className="font-hindi">एक बातचीत।</em></h2>
+          <h2>Let’s start with<br /><em>a conversation.</em></h2>
           <p className={ui.introduction}>A few details today. A world of possibilities tomorrow.</p>
         </div>
 

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, MapPin, Phone, X } from "lucide-react";
+import FlipCopy from "@/shared/ui/flip-copy";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 const ui: Record<string, string> = {
@@ -11,13 +12,14 @@ const ui: Record<string, string> = {
   shell: "dgs-site-header-shell relative w-full",
   inner: "dgs-site-header-inner w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto h-[var(--header-height)] flex items-center justify-between gap-7.5 [transition:height_.4s_cubic-bezier(.22,_1,_.36,_1)] max-[1150px]:w-[calc(100%_-_80px)] max-[1150px]:gap-5.5 max-[700px]:w-[calc(100%_-_40px)] max-[700px]:gap-3.5 max-[370px]:w-[calc(100%_-_32px)] max-[370px]:gap-2.5 motion-reduce:transition-none",
   brand: "dgs-site-header-brand inline-flex items-center flex-none [&_>_img]:w-[var(--logo-width)] [&_>_img]:h-[var(--logo-height)] [&_>_img]:object-contain [&_>_img]:[transition:width_.4s_cubic-bezier(.22,_1,_.36,_1),_height_.4s_cubic-bezier(.22,_1,_.36,_1)] motion-reduce:[&_>_img]:transition-none",
-  navigation: "dgs-site-header-navigation flex items-center justify-center gap-8 [&_>_a]:relative [&_>_a]:pt-[15px] [&_>_a]:pb-[15px] [&_>_a]:text-[15px] [&_>_a]:font-medium [&_>_a]:leading-[1.5] [&_>_a]:whitespace-nowrap [&_>_a]:text-[#455e48] [&_>_a]:[transition:color_.2s] [&_>_a::after]:content-[''] [&_>_a::after]:absolute [&_>_a::after]:bottom-1.5 [&_>_a::after]:left-0 [&_>_a::after]:w-full [&_>_a::after]:h-[1px] [&_>_a::after]:bg-[#ad8b4d] [&_>_a::after]:[transform:scaleX(0)] [&_>_a::after]:[transform-origin:left] [&_>_a::after]:[transition:transform_.3s_cubic-bezier(.16,_1,_.3,_1)] [&_>_a:hover]:text-[#173f32] [&_>_a[aria-current]]:text-[#173f32] [&_>_a:hover::after]:[transform:scaleX(1)] [&_>_a:hover_.dgs-site-header-roll_>_span]:[transform:translateY(-1.5em)] [&_>_a:focus-visible_.dgs-site-header-roll_>_span]:[transform:translateY(-1.5em)] [&_>_a[aria-current]::after]:[transform:scaleX(1)] max-[1250px]:gap-6 max-[1150px]:gap-5 max-[1150px]:[&_>_a]:text-[14px] max-[1050px]:hidden motion-reduce:[&_>_a]:transition-none motion-reduce:[&_>_a::after]:transition-none",
-  roll: "dgs-site-header-roll block overflow-hidden leading-[1.5] [&_>_span]:block [&_>_span]:[text-shadow:0_1.5em_currentColor] [&_>_span]:[transition:transform_.5s_cubic-bezier(.16,_1,_.3,_1)] motion-reduce:[&_>_span]:transition-none",
+  navigation: "dgs-site-header-navigation flex items-center justify-center gap-8 [&_>_a]:relative [&_>_a]:pt-[15px] [&_>_a]:pb-[15px] [&_>_a]:text-[15px] [&_>_a]:font-medium [&_>_a]:leading-[1.5] [&_>_a]:whitespace-nowrap [&_>_a]:text-[#455e48] [&_>_a]:[transition:color_.2s] [&_>_a::after]:content-[''] [&_>_a::after]:absolute [&_>_a::after]:bottom-1.5 [&_>_a::after]:left-0 [&_>_a::after]:w-full [&_>_a::after]:h-[1px] [&_>_a::after]:bg-[#ad8b4d] [&_>_a::after]:[transform:scaleX(0)] [&_>_a::after]:[transform-origin:left] [&_>_a::after]:[transition:transform_.3s_cubic-bezier(.16,_1,_.3,_1)] [&_>_a:hover]:text-[#173f32] [&_>_a[aria-current]]:text-[#173f32] [&_>_a:hover::after]:[transform:scaleX(1)] [&_>_a:hover_.dgs-site-header-rollInner]:[transform:translateY(-1.7em)] [&_>_a:focus-visible_.dgs-site-header-rollInner]:[transform:translateY(-1.7em)] [&_>_a[aria-current]::after]:[transform:scaleX(1)] max-[1250px]:gap-6 max-[1150px]:gap-5 max-[1150px]:[&_>_a]:text-[14px] max-[1050px]:hidden motion-reduce:[&_>_a]:transition-none motion-reduce:[&_>_a::after]:transition-none",
+  roll: "dgs-site-header-roll relative block h-[1.7em] overflow-hidden leading-[1.7]",
+  rollInner: "dgs-site-header-rollInner block [transition:transform_.5s_cubic-bezier(.16,_1,_.3,_1)] motion-reduce:transition-none [&_>_span]:block [&_>_span]:h-[1.7em] [&_>_span]:leading-[1.7] [&_>_span]:whitespace-nowrap",
   actions: "dgs-site-header-actions flex items-center gap-[25px] flex-none max-[1150px]:gap-4.5 max-[700px]:gap-[13px] max-[370px]:gap-2.5",
   phone: "dgs-site-header-phone group/phone relative isolate inline-flex items-center gap-1.5 pt-[15px] pb-[15px] text-[15px] font-semibold leading-[1.5] whitespace-nowrap max-[1150px]:text-[14px] max-[700px]:p-0 max-[700px]:px-1",
   phoneIcon: "dgs-site-header-phoneIcon dgs-contact-glow-icon grid place-items-center [&_svg]:size-4 [&_svg]:stroke-[1.9] max-[700px]:[&_svg]:size-[15px]",
   phoneText: "dgs-site-header-phoneText dgs-contact-glow-text whitespace-nowrap max-[1150px]:hidden max-[1050px]:block max-[700px]:hidden",
-  enquire: "dgs-site-header-enquire dgs-btn-3d dgs-btn-3d-fill inline-flex items-center justify-center gap-4 min-h-[43px] rounded-[8px] bg-[#073c32] pt-3 pr-4.5 pb-3 pl-4.5 text-[15px] font-semibold text-[#fffbee] [&:hover]:bg-[#15513d] [&_svg]:text-[#e5c37a] [&_svg]:[transition:transform_.25s] [&:hover_svg]:[transform:translate(2px,_-2px)] max-[700px]:min-h-[37px] max-[700px]:gap-2.5 max-[700px]:px-3 max-[700px]:py-2.5 max-[700px]:text-[14px] max-[700px]:[&_svg]:h-3.5 max-[700px]:[&_svg]:w-3.5 max-[370px]:gap-2 max-[370px]:px-2.5 max-[370px]:text-[13px]",
+  enquire: "dgs-site-header-enquire dgs-btn-3d dgs-btn-3d-fill inline-flex items-center justify-center gap-4 min-h-[43px] rounded-[8px] bg-[#073c32] pt-3 pr-4.5 pb-3 pl-4.5 text-[15px] font-semibold text-[#fffbee] [&:hover]:bg-[#15513d] [&:hover_.dgs-site-header-rollInner]:[transform:translateY(-1.7em)] [&:focus-visible_.dgs-site-header-rollInner]:[transform:translateY(-1.7em)] [&_svg]:text-[#e5c37a] [&_svg]:[transition:transform_.25s] [&:hover_svg]:[transform:translate(2px,_-2px)] max-[700px]:min-h-[37px] max-[700px]:gap-2.5 max-[700px]:px-3 max-[700px]:py-2.5 max-[700px]:text-[14px] max-[700px]:[&_svg]:h-3.5 max-[700px]:[&_svg]:w-3.5 max-[370px]:gap-2 max-[370px]:px-2.5 max-[370px]:text-[13px]",
   toggle: "dgs-site-header-toggle hidden items-center justify-center flex-none w-8.5 h-9.5 pt-[7px] pr-[7px] pb-[7px] pl-[7px] [border:0] bg-transparent text-[#173f32] max-[1050px]:flex max-[700px]:w-[27px] max-[700px]:pt-[3px] max-[700px]:pr-[3px] max-[700px]:pb-[3px] max-[700px]:pl-[3px]",
   menuLines: "dgs-site-header-menuLines flex flex-col items-end gap-1.5 w-5 [&_>_span]:h-[1.5px] [&_>_span]:w-5 [&_>_span]:bg-[#173f32] [&_>_span:last-child]:w-3.5",
   mobileMenu: "dgs-site-header-mobileMenu absolute top-full left-0 right-0 pt-[23px] pr-7 pb-6.5 pl-7 max-h-[calc(100dvh_-_145px)] overflow-auto bg-[#fbfaf4] [border-block:1px_solid_#dce1d0] shadow-[0_15px_25px_#173a2714] [&_>_a]:flex [&_>_a]:items-center [&_>_a]:justify-between [&_>_a]:pt-[17px] [&_>_a]:pr-0 [&_>_a]:pb-[17px] [&_>_a]:pl-0 [&_>_a]:[border-bottom:1px_solid_#e0e4d4] [&_>_a]:text-[#36533e] [&_>_a]:text-[17px] [&_>_a]:font-medium [&_>_a]:leading-[1.4] [&_>_a_>_svg]:text-[#7e8b6a] [&_>_a_>_svg]:stroke-[1.4] [&_>_a[aria-current]]:text-[#7f6435] max-[700px]:pl-5.5 max-[700px]:pr-5.5",
@@ -27,12 +29,27 @@ const ui: Record<string, string> = {
 
 
 const navigation = [
-  { label: "Admission drive", href: "#admission-drive" },
-  { label: "Why DGS", href: "#why-dgs" },
-  { label: "Boarding life", href: "#boarding" },
-  { label: "Learning & beyond", href: "#life-at-dgs" },
-  { label: "Our programmes", href: "#programmes" },
+  { label: "Admission drive", hindi: "प्रवेश अभियान", href: "#admission-drive" },
+  { label: "Why DGS", hindi: "क्यों डी.जी.एस.", href: "#why-dgs" },
+  { label: "Boarding life", hindi: "बोर्डिंग जीवन", href: "#boarding" },
+  { label: "Learning & beyond", hindi: "पढ़ाई और आगे", href: "#life-at-dgs" },
+  { label: "Our programmes", hindi: "हमारे कार्यक्रम", href: "#programmes" },
 ];
+
+function HindiRoll({ english, hindi }: { english: string; hindi: string }) {
+  return (
+    <span className="inline-grid" aria-hidden="true">
+      <span className="invisible col-start-1 row-start-1 whitespace-nowrap">{english}</span>
+      <span className="invisible col-start-1 row-start-1 whitespace-nowrap font-hindi" lang="hi">{hindi}</span>
+      <span className={`${ui.roll} col-start-1 row-start-1`}>
+        <span className={ui.rollInner}>
+          <span>{english}</span>
+          <span lang="hi" className="font-hindi">{hindi}</span>
+        </span>
+      </span>
+    </span>
+  );
+}
 
 export default function SiteHeader({ onEnquire }: { onEnquire: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -89,7 +106,7 @@ export default function SiteHeader({ onEnquire }: { onEnquire: () => void }) {
           </a>
 
           <nav className={ui.navigation} aria-label="Main navigation">
-            {navigation.map(item => <a key={item.href} href={item.href} aria-current={activeSection === item.href ? "location" : undefined} onClick={() => setActiveSection(item.href)}><span className={ui.roll}><span>{item.label}</span></span></a>)}
+            {navigation.map(item => <a key={item.href} href={item.href} aria-label={item.label} aria-current={activeSection === item.href ? "location" : undefined} onClick={() => setActiveSection(item.href)}><HindiRoll english={item.label} hindi={item.hindi} /></a>)}
           </nav>
 
           <div className={ui.actions}>
@@ -97,7 +114,7 @@ export default function SiteHeader({ onEnquire }: { onEnquire: () => void }) {
               <span className={ui.phoneIcon}><Phone size={16} /></span>
               <span className={ui.phoneText}>+91 74559 97333</span>
             </a>
-            <button className={ui.enquire} onClick={enquire} aria-label="Enquire about admissions" aria-haspopup="dialog">Enquire now <ArrowUpRight size={17} /></button>
+            <button className={ui.enquire} onClick={enquire} aria-label="Enquire about admissions" aria-haspopup="dialog"><HindiRoll english="Enquire now" hindi="पूछताछ करें" /> <ArrowUpRight size={17} /></button>
             <button ref={toggleRef} className={ui.toggle} aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <X size={20} /> : <span className={ui.menuLines} aria-hidden="true"><span /><span /></span>}
             </button>
@@ -105,8 +122,22 @@ export default function SiteHeader({ onEnquire }: { onEnquire: () => void }) {
         </div>
 
         {menuOpen && <nav className={ui.mobileMenu} id="mobile-menu" data-lenis-prevent aria-label="Mobile navigation">
-          <div className={ui.mobileIntro}>PUNJAB · DISCOVER DGS</div>
-          {navigation.map(item => <a key={item.href} href={item.href} aria-current={activeSection === item.href ? "location" : undefined} onClick={() => { setActiveSection(item.href); setMenuOpen(false); }}>{item.label}<ArrowUpRight size={17} /></a>)}
+          <div className={ui.mobileIntro}>
+            <FlipCopy interval={8000} label="Punjab · Discover DGS. पंजाब प्रवेश अभियान। ਪੰਜਾਬ ਐਡਮਿਸ਼ਨ ਡਰਾਈਵ।" frames={[
+              <span className="block tracking-[1.5px]">PUNJAB · DISCOVER DGS</span>,
+              <span lang="hi" className="font-hindi block tracking-normal">पंजाब प्रवेश अभियान</span>,
+              <span lang="pa" className="font-punjabi block tracking-normal">ਪੰਜਾਬ ਐਡਮਿਸ਼ਨ ਡਰਾਈਵ</span>,
+            ]} />
+          </div>
+          {navigation.map(item => (
+            <a key={item.href} href={item.href} aria-label={item.label} aria-current={activeSection === item.href ? "location" : undefined} onClick={() => { setActiveSection(item.href); setMenuOpen(false); }}>
+              <span className="min-w-0">
+                <span className="block">{item.label}</span>
+                <span lang="hi" className="font-hindi mt-0.5 block text-[13px] font-normal tracking-normal text-[#7a6a4a]">{item.hindi}</span>
+              </span>
+              <ArrowUpRight size={17} />
+            </a>
+          ))}
           <div className={ui.mobileFooter}><p><MapPin size={13} /> Dehradun, Uttarakhand</p><button className="dgs-btn-3d dgs-btn-3d-fill" onClick={enquire} aria-haspopup="dialog">Admissions 2027–28 <ArrowRight size={16} /></button></div>
         </nav>}
       </div>
